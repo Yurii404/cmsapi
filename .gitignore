@@ -1,14 +1,20 @@
-.idea
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
 *.iml
-*/.DS_Store
-*.backup
-*/.gradle
-.env
-liquibase/.DS_Store
-.env.*
-!.env.default
-node_modules/
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Mac OS ###
 .DS_Store
-run-*.sh
-.vscode
-package-lock.json
