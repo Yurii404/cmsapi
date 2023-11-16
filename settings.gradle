@@ -1,0 +1,4 @@
+rootProject.name = 'cmsapi'
+include 'auth-service'
+include 'discovery-service'
+
