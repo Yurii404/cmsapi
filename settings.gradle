@@ -1,4 +1,5 @@
 rootProject.name = 'cmsapi'
 include 'discovery-service'
 include 'config-service'
+include 'api-gateway'
 
