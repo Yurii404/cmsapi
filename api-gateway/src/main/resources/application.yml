@@ -1,8 +1,10 @@
 spring:
   application:
-    name: discovery-service
+    name: api-gateway
   config:
     import: optional:configserver:http://localhost:8071/
+  main:
+    web-application-type: reactive
 
 server:
-  port: 8761
+  port: 8762
