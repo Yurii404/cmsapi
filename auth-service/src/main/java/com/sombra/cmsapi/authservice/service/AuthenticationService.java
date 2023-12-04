@@ -8,6 +8,7 @@ import com.sombra.cmsapi.authservice.entity.Token;
 import com.sombra.cmsapi.authservice.enums.Role;
 import com.sombra.cmsapi.authservice.entity.User;
 import com.sombra.cmsapi.authservice.enums.TokenType;
+import com.sombra.cmsapi.authservice.exception.EmailAlreadyExistsException;
 import com.sombra.cmsapi.authservice.exception.RoleNotFoundException;
 import com.sombra.cmsapi.authservice.repository.TokenRepository;
 import com.sombra.cmsapi.authservice.repository.UserRepository;
@@ -34,13 +35,13 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponseDto register(RegisterRequestDto request) {
-        Role userRole;
-        try {
-            userRole = Role.valueOf(request.getRole().toUpperCase());
-        }catch (IllegalArgumentException ex){
-            log.error("Invalid role: {}, Ex: {}", request.getRole(), ex.getMessage());
-            throw new RoleNotFoundException(request.getRole());
-        }
+        //Do check if the role is valid
+        Role userRole = getRoleOrThrow(request);
+
+        //Do check if the user with the email already exist
+        userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
+            throw new EmailAlreadyExistsException(request.getEmail());
+        });
 
         User user = User.builder()
                 .firstname(request.getFirstName())
@@ -57,6 +58,17 @@ public class AuthenticationService {
         return AuthenticationResponseDto.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    private static Role getRoleOrThrow(RegisterRequestDto request) {
+        Role userRole;
+        try {
+            userRole = Role.valueOf(request.getRole().toUpperCase());
+        }catch (IllegalArgumentException ex){
+            log.error("Invalid role: {}, Ex: {}", request.getRole(), ex.getMessage());
+            throw new RoleNotFoundException(request.getRole());
+        }
+        return userRole;
     }
 
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {

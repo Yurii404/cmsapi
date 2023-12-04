@@ -5,6 +5,7 @@ import com.sombra.cmsapi.authservice.dto.AuthenticationResponseDto;
 import com.sombra.cmsapi.authservice.dto.RegisterRequestDto;
 import com.sombra.cmsapi.authservice.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,13 +23,13 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponseDto> register(
             @RequestBody RegisterRequestDto request
     ) {
-        return ResponseEntity.ok(authenticationService.register(request));
+        return new ResponseEntity<>(authenticationService.register(request), HttpStatus.OK);
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDto> authenticate(
             @RequestBody AuthenticationRequestDto request
     ) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        return new ResponseEntity<>(authenticationService.authenticate(request), HttpStatus.OK);
     }
 }
