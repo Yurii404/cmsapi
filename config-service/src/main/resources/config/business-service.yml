@@ -1,12 +1,12 @@
 spring:
   application:
-    name: auth-service
+    name: business-service
   cloud:
     loadbalancer:
       ribbon:
         enabled: false
   datasource:
-    url: jdbc:mysql://localhost:3306/jwt_security
+    url: jdbc:mysql://localhost:3306/cmsapi
     username: root
     password: SuperSecretPassword
     driver-class-name: com.mysql.cj.jdbc.Driver
