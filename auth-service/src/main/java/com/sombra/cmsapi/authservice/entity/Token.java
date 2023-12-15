@@ -1,6 +1,6 @@
 package com.sombra.cmsapi.authservice.entity;
 
-import com.sombra.cmsapi.authservice.enums.TokenType;
+import com.sombra.cmsapi.authservice.enumerated.TokenType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +21,8 @@ public class Token {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String token;
+    private String accessToken;
+    private String refreshToken;
 
     @Enumerated(EnumType.STRING)
     private TokenType tokenType;
@@ -29,4 +30,17 @@ public class Token {
     private boolean expired;
 
     private boolean revoked;
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "id=" + id +
+                ", user=" + user +
+                ", accessToken='" + accessToken + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", tokenType=" + tokenType +
+                ", expired=" + expired +
+                ", revoked=" + revoked +
+                '}';
+    }
 }

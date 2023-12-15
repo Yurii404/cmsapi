@@ -1,18 +1,16 @@
 package com.sombra.cmsapi.authservice.dto;
 
+import com.sombra.cmsapi.authservice.enumerated.UserRole;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class RegisterRequestDto {
+public class UserRegisterDto {
+
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-    private String role;
+    private UserRole role;
 }
