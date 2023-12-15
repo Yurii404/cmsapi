@@ -1,20 +1,20 @@
 package com.sombra.cmsapi.authservice.service;
 
 import com.sombra.cmsapi.authservice.dto.AuthRequestDto;
-import com.sombra.cmsapi.authservice.entity.Token;
-import com.sombra.cmsapi.authservice.entity.User;
 import com.sombra.cmsapi.authservice.dto.AuthResponseDto;
 import com.sombra.cmsapi.authservice.dto.UserRegisterDto;
+import com.sombra.cmsapi.authservice.entity.Token;
+import com.sombra.cmsapi.authservice.entity.User;
 import com.sombra.cmsapi.authservice.enumerated.TokenType;
 import com.sombra.cmsapi.authservice.enumerated.UserRole;
 import com.sombra.cmsapi.authservice.exception.EmailAlreadyExistsException;
 import com.sombra.cmsapi.authservice.exception.RoleNotFoundException;
 import com.sombra.cmsapi.authservice.exception.TokenNotFoundException;
 import com.sombra.cmsapi.authservice.exception.UserNotRegisteredException;
+import com.sombra.cmsapi.authservice.mapper.UserMapper;
 import com.sombra.cmsapi.authservice.repository.TokenRepository;
 import com.sombra.cmsapi.authservice.repository.UserRepository;
 import lombok.AllArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +36,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper = UserMapper.INSTANCE;
 
     public AuthResponseDto register(UserRegisterDto requestDto) {
         //Do check if the role is valid
@@ -51,14 +52,7 @@ public class AuthService {
         try {
             restTemplate.postForEntity("http://business-service/users/register", requestDto, Object.class);
 
-            User userDetails = User.builder()
-                    .firstname(requestDto.getFirstName())
-                    .lastName(requestDto.getLastName())
-                    .email(requestDto.getEmail())
-                    .password(requestDto.getPassword())
-                    .role(userRole)
-                    .build();
-
+            User userDetails = userMapper.userRegisterDtoToUser(requestDto);
 
             userRepository.save(userDetails);
 

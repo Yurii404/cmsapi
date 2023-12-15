@@ -1,7 +1,5 @@
 package com.sombra.cmsapi.businessservice.config.filter;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
