@@ -2,7 +2,6 @@ package com.sombra.cmsapi.businessservice.config.filter;
 
 
 import com.sombra.cmsapi.businessservice.entity.AuthUserDetails;
-import com.sombra.cmsapi.businessservice.entity.User;
 import com.sombra.cmsapi.businessservice.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -45,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() != null) {
                 AuthUserDetails userDetails = (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                if(!userDetails.getEmail().equals(userEmail)){
+                if (!userDetails.getEmail().equals(userEmail)) {
                     authenticateUser(userEmail);
                 }
             }

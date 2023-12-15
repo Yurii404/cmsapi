@@ -1,8 +1,10 @@
 package com.sombra.cmsapi.businessservice.entity;
 
 import com.sombra.cmsapi.businessservice.enumerated.UserRole;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthUserDetails implements UserDetails{
+public class AuthUserDetails implements UserDetails {
 
     private String firstName;
     private String lastName;
