@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="Yurii Kupchyn" id="predefine-admin-user">
+        <insert tableName="users">
+            <column name="id" value="750f783e-9d7d-11ee-8c90-0242ac120002"/>
+            <column name="email" value="yuriikupchin@gmail.com"/>
+            <column name="password"
+                    value="$2a$12$CkbdRI4au7jKRw/gVzEF4.ffjCt0K8bBNb3.VMwAPpvr1McLlsbEe"/> <!-- admin123 -->
+            <column name="first_name" value="Yurii"/>
+            <column name="last_name" value="Kupchyn"/>
+            <column name="role" value="ADMIN"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
