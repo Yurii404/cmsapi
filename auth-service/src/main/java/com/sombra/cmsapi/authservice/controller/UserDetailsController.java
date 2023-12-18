@@ -1,6 +1,5 @@
 package com.sombra.cmsapi.authservice.controller;
 
-
 import com.sombra.cmsapi.authservice.dto.UserDetailsResponseDto;
 import com.sombra.cmsapi.authservice.entity.User;
 import com.sombra.cmsapi.authservice.mapper.UserMapper;
@@ -19,14 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserDetailsController {
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper = UserMapper.INSTANCE;
+  private final UserRepository userRepository;
+  private final UserMapper userMapper = UserMapper.INSTANCE;
 
-    @GetMapping("{userMail}")
-    public ResponseEntity<UserDetailsResponseDto> getByEmail(@PathVariable String userMail) {
-        User user = userRepository.findByEmail(userMail).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
+  @GetMapping("{userMail}")
+  public ResponseEntity<UserDetailsResponseDto> getByEmail(@PathVariable String userMail) {
+    User user =
+        userRepository
+            .findByEmail(userMail)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new ResponseEntity<>(userMapper.userToUserDetailsResponseDto(user), HttpStatus.OK);
-    }
+    return new ResponseEntity<>(userMapper.userToUserDetailsResponseDto(user), HttpStatus.OK);
+  }
 }

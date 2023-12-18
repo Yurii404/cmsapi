@@ -18,34 +18,34 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthenticationFilter implements GatewayFilter {
 
-    private final RouteValidator routeValidator;
-    private final JwtUtil jwtUtil;
+  private final RouteValidator routeValidator;
+  private final JwtUtil jwtUtil;
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        ServerHttpRequest request = exchange.getRequest();
+  @Override
+  public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    ServerHttpRequest request = exchange.getRequest();
 
-        if (routeValidator.isSecured.test(request)) {
-            if (authMissing(request)) {
-                return onError(exchange, HttpStatus.UNAUTHORIZED);
-            }
+    if (routeValidator.isSecured.test(request)) {
+      if (authMissing(request)) {
+        return onError(exchange, HttpStatus.UNAUTHORIZED);
+      }
 
-            final String token = request.getHeaders().getOrEmpty("Authorization").get(0);
+      final String token = request.getHeaders().getOrEmpty("Authorization").get(0);
 
-            if (jwtUtil.isTokenExpired(token)) {
-                return onError(exchange, HttpStatus.UNAUTHORIZED);
-            }
-        }
-        return chain.filter(exchange);
+      if (jwtUtil.isTokenExpired(token)) {
+        return onError(exchange, HttpStatus.UNAUTHORIZED);
+      }
     }
+    return chain.filter(exchange);
+  }
 
-    private Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
-        ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(httpStatus);
-        return response.setComplete();
-    }
+  private Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
+    ServerHttpResponse response = exchange.getResponse();
+    response.setStatusCode(httpStatus);
+    return response.setComplete();
+  }
 
-    private boolean authMissing(ServerHttpRequest request) {
-        return !request.getHeaders().containsKey("Authorization");
-    }
+  private boolean authMissing(ServerHttpRequest request) {
+    return !request.getHeaders().containsKey("Authorization");
+  }
 }

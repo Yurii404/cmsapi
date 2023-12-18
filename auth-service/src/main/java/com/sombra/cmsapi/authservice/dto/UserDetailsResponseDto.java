@@ -9,9 +9,9 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class UserDetailsResponseDto {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private UserRole role;
+  private String firstName;
+  private String lastName;
+  private String email;
+  private String password;
+  private UserRole role;
 }

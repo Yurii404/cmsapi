@@ -16,14 +16,16 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "users", catalog = "cmsapi")
 public class User {
 
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    private String id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+  @Id
+  @GeneratedValue(generator = "uuid2")
+  @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  private String id;
+
+  private String firstName;
+  private String lastName;
+  private String email;
+  private String password;
+
+  @Enumerated(EnumType.STRING)
+  private UserRole role;
 }

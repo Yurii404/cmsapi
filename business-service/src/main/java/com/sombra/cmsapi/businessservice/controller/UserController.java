@@ -14,23 +14,22 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody UserRegisterDto registerDto) {
-        return new ResponseEntity<>(userService.save(registerDto), HttpStatus.OK);
-    }
+  @PostMapping("/register")
+  public ResponseEntity<UserDto> register(@RequestBody UserRegisterDto registerDto) {
+    return new ResponseEntity<>(userService.save(registerDto), HttpStatus.OK);
+  }
 
-    @PreAuthorize("hasAuthority('STUDENT')")
-    @GetMapping("/secured")
-    public ResponseEntity<String> secured() {
-        return new ResponseEntity<>("has role student", HttpStatus.OK);
-    }
+  @PreAuthorize("hasAuthority('STUDENT')")
+  @GetMapping("/secured")
+  public ResponseEntity<String> secured() {
+    return new ResponseEntity<>("has role student", HttpStatus.OK);
+  }
 
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/securedAD")
-    public ResponseEntity<String> securedAd() {
-        return new ResponseEntity<>("has role admin", HttpStatus.OK);
-    }
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @GetMapping("/securedAD")
+  public ResponseEntity<String> securedAd() {
+    return new ResponseEntity<>("has role admin", HttpStatus.OK);
+  }
 }

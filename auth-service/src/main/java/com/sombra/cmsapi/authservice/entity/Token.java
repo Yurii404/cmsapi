@@ -15,35 +15,44 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "tokens", catalog = "jwt_security")
 public class Token {
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    private String id;
+  @Id
+  @GeneratedValue(generator = "uuid2")
+  @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    private String accessToken;
-    private String refreshToken;
+  private String accessToken;
+  private String refreshToken;
 
-    @Enumerated(EnumType.STRING)
-    private TokenType tokenType;
+  @Enumerated(EnumType.STRING)
+  private TokenType tokenType;
 
-    private boolean expired;
+  private boolean expired;
 
-    private boolean revoked;
+  private boolean revoked;
 
-    @Override
-    public String toString() {
-        return "Token{" +
-                "id=" + id +
-                ", user=" + user +
-                ", accessToken='" + accessToken + '\'' +
-                ", refreshToken='" + refreshToken + '\'' +
-                ", tokenType=" + tokenType +
-                ", expired=" + expired +
-                ", revoked=" + revoked +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "Token{"
+        + "id="
+        + id
+        + ", user="
+        + user
+        + ", accessToken='"
+        + accessToken
+        + '\''
+        + ", refreshToken='"
+        + refreshToken
+        + '\''
+        + ", tokenType="
+        + tokenType
+        + ", expired="
+        + expired
+        + ", revoked="
+        + revoked
+        + '}';
+  }
 }

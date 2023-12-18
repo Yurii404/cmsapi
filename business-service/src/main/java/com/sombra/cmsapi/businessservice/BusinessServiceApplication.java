@@ -8,8 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 public class BusinessServiceApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(BusinessServiceApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(BusinessServiceApplication.class, args);
+  }
 }
