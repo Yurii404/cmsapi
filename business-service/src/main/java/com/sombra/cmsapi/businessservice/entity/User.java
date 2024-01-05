@@ -2,6 +2,7 @@ package com.sombra.cmsapi.businessservice.entity;
 
 import com.sombra.cmsapi.businessservice.enumerated.UserRole;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,9 @@ public class User {
   private String lastName;
   private String email;
   private String password;
+
+  @OneToMany(mappedBy = "student")
+  private List<CourseFeedback> feedbacks;
 
   @Enumerated(EnumType.STRING)
   private UserRole role;
