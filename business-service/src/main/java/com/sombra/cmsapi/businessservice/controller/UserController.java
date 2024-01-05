@@ -1,5 +1,6 @@
 package com.sombra.cmsapi.businessservice.controller;
 
+import com.sombra.cmsapi.businessservice.dto.ChangeuserRoleDto;
 import com.sombra.cmsapi.businessservice.dto.UserDto;
 import com.sombra.cmsapi.businessservice.dto.UserRegisterDto;
 import com.sombra.cmsapi.businessservice.service.UserService;
@@ -17,19 +18,13 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/register")
-  public ResponseEntity<UserDto> register(@RequestBody UserRegisterDto registerDto) {
-    return new ResponseEntity<>(userService.save(registerDto), HttpStatus.OK);
-  }
-
-  @PreAuthorize("hasAuthority('STUDENT')")
-  @GetMapping("/secured")
-  public ResponseEntity<String> secured() {
-    return new ResponseEntity<>("has role student", HttpStatus.OK);
+  public ResponseEntity<UserDto> register(@RequestBody UserRegisterDto requestDto) {
+    return new ResponseEntity<>(userService.save(requestDto), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  @GetMapping("/securedAD")
-  public ResponseEntity<String> securedAd() {
-    return new ResponseEntity<>("has role admin", HttpStatus.OK);
+  @PutMapping("/role")
+  public ResponseEntity<UserDto> changeUserRole(@RequestBody ChangeuserRoleDto requestDto) {
+    return new ResponseEntity<>(userService.updateUserRole(requestDto), HttpStatus.OK);
   }
 }

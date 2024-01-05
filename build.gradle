@@ -18,8 +18,8 @@ allprojects {
     apply plugin: 'io.spring.dependency-management'
 
     java {
-        sourceCompatibility = '17'
-        targetCompatibility = '17'
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     repositories {
@@ -36,6 +36,8 @@ subprojects {
             googleJavaFormat("1.18.1")
         }
     }
+
+    compileJava.dependsOn 'spotlessApply'
 
     dependencyManagement {
         imports {
