@@ -1,6 +1,9 @@
 package com.sombra.cmsapi.businessservice.entity;
 
+import com.sombra.cmsapi.businessservice.enumerated.CourseStatus;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -36,6 +39,9 @@ public class CourseFeedback {
   @ManyToOne
   @JoinColumn(name = "course_id", nullable = false)
   private Course course;
+
+  @Enumerated(EnumType.STRING)
+  private CourseStatus status;
 
   private int finalMark;
   private String content;

@@ -30,7 +30,7 @@ public class Lesson {
   private String content;
 
   @ManyToOne
-  @JoinColumn(name = "course_id", nullable = false)
+  @JoinColumn(name = "course_id")
   private Course course;
 
   @OneToMany(mappedBy = "lesson")

@@ -7,7 +7,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +31,6 @@ public class Homework {
   private Lesson lesson;
 
   private String task;
-  private ZonedDateTime submissionDate;
 
   @OneToMany(mappedBy = "homework")
   private List<CompletedHomework> completedHomeworks;

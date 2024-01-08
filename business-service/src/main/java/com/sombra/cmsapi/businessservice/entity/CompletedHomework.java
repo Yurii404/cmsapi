@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,4 +40,6 @@ public class CompletedHomework {
   private byte[] homeworkFile;
   private int mark;
   private String comment;
+  private ZonedDateTime submissionDate;
+  private ZonedDateTime reviewDate;
 }

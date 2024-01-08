@@ -1,7 +1,7 @@
 package com.sombra.cmsapi.businessservice.mapper;
 
-import com.sombra.cmsapi.businessservice.dto.UserDto;
-import com.sombra.cmsapi.businessservice.dto.UserRegisterDto;
+import com.sombra.cmsapi.businessservice.dto.user.UserDto;
+import com.sombra.cmsapi.businessservice.dto.user.UserRegisterDto;
 import com.sombra.cmsapi.businessservice.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
