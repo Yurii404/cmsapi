@@ -13,7 +13,7 @@ public class ApplicationControllerAdvice {
 
   @ExceptionHandler(EntityNotFoundException.class)
   public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
@@ -30,5 +30,11 @@ public class ApplicationControllerAdvice {
             .findFirst()
             .orElse("Validation error");
     return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(NotAllowedOperationException.class)
+  public ResponseEntity<String> handleNotAllowedOperationException(
+      MethodArgumentNotValidException ex) {
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 }
