@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 @Data
@@ -30,7 +31,7 @@ public class CompletedHomework {
   private User student;
 
   @ManyToOne
-  @JoinColumn(name = "instructor_id", nullable = false)
+  @JoinColumn(name = "instructor_id")
   private User instructor;
 
   @ManyToOne
@@ -40,6 +41,8 @@ public class CompletedHomework {
   private byte[] homeworkFile;
   private int mark;
   private String comment;
+
+  @CreationTimestamp
   private ZonedDateTime submissionDate;
   private ZonedDateTime reviewDate;
 }
