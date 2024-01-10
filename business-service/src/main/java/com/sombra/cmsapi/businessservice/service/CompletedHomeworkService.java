@@ -13,17 +13,25 @@ import com.sombra.cmsapi.businessservice.repository.CompletedHomeworkRepository;
 import com.sombra.cmsapi.businessservice.repository.HomeworkRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
 import java.io.IOException;
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class CompletedHomeworkService {
 
   private final CompletedHomeworkRepository completedHomeworkRepository;
   private final UserRepository userRepository;
   private final HomeworkRepository homeworkRepository;
+
+  private final Logger LOGGER = LoggerFactory.getLogger(CompletedHomeworkService.class);
+
   private final CompletedHomeworkMapper completedHomeworkMapper = CompletedHomeworkMapper.INSTANCE;
 
   public CompletedHomeworkDto save(CreateCompletedHomeworkRequest requestDto, MultipartFile file) {
@@ -31,18 +39,35 @@ public class CompletedHomeworkService {
     Homework homework = getHomeworkById(requestDto.getHomeworkId());
 
     try {
-      CompletedHomework completedHomework = CompletedHomework.builder()
-          .homeworkFile(file.getBytes())
-          .student(student)
-          .homework(homework)
-          .build();
+      CompletedHomework completedHomework =
+          CompletedHomework.builder()
+              .homeworkFile(file.getBytes())
+              .student(student)
+              .homework(homework)
+              .build();
 
-      CompletedHomework savedCompletedHomework =  completedHomeworkRepository.save(completedHomework);
+      CompletedHomework savedCompletedHomework =
+          completedHomeworkRepository.save(completedHomework);
 
-      return completedHomeworkMapper.completedHomeworkToCompletedHomeworkDto(savedCompletedHomework);
+      return completedHomeworkMapper.completedHomeworkToCompletedHomeworkDto(
+          savedCompletedHomework);
     } catch (IOException e) {
+      LOGGER.error("Something went wrong when reading file.");
       throw new BrokenFileException("Something went wrong when reading file.");
     }
+  }
+
+  public List<CompletedHomework> getAll() {
+    return completedHomeworkRepository.findAll();
+  }
+
+  public CompletedHomework getById(String id) {
+    return completedHomeworkRepository
+        .findById(id)
+        .orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("Completed homework with id: %s does not exist!", id)));
   }
 
   private User getStudentById(String userId) {

@@ -10,16 +10,20 @@ import com.sombra.cmsapi.businessservice.mapper.LessonMapper;
 import com.sombra.cmsapi.businessservice.repository.CourseRepository;
 import com.sombra.cmsapi.businessservice.repository.LessonRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class LessonService {
 
   private final LessonRepository lessonRepository;
   private final CourseRepository courseRepository;
+  private final Logger LOGGER = LoggerFactory.getLogger(LessonService.class);
   private final LessonMapper lessonMapper = LessonMapper.INSTANCE;
 
   public LessonDto save(CreateLessonRequest createLessonRequest) {
@@ -75,18 +79,16 @@ public class LessonService {
     return lessonMapper.lessonToLessonDto(lessonRepository.save(lessonFromRep));
   }
 
-  public List<LessonDto> getAll() {
-    return lessonRepository.findAll().stream()
-        .map(lessonMapper::lessonToLessonDto)
-        .collect(Collectors.toList());
+  public List<Lesson> getAll() {
+    return lessonRepository.findAll();
   }
 
-  public Lesson getById(String lessonId) {
+  public Lesson getById(String userId) {
     return lessonRepository
-        .findById(lessonId)
+        .findById(userId)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(
-                    String.format("Lesson with id: %s does not exist!", lessonId)));
+                    String.format("Lesson with id: %s does not exist!", userId)));
   }
 }

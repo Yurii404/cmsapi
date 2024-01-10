@@ -3,6 +3,7 @@ package com.sombra.cmsapi.businessservice.controller;
 import com.sombra.cmsapi.businessservice.dto.user.ChangeUserRoleDto;
 import com.sombra.cmsapi.businessservice.dto.user.UserDto;
 import com.sombra.cmsapi.businessservice.dto.user.UserRegisterDto;
+import com.sombra.cmsapi.businessservice.mapper.UserMapper;
 import com.sombra.cmsapi.businessservice.service.UserService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
+  private final UserMapper userMapper = UserMapper.INSTANCE;
 
   @PostMapping("/register")
   public ResponseEntity<UserDto> register(@RequestBody UserRegisterDto requestDto) {
@@ -32,6 +34,13 @@ public class UserController {
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping
   public ResponseEntity<List<UserDto>> getAll() {
-    return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+    return new ResponseEntity<>(
+        userService.getAll().stream().map(userMapper::userToUserDto).toList(), HttpStatus.OK);
+  }
+
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @GetMapping("/{id}")
+  public ResponseEntity<UserDto> getById(@PathVariable String id) {
+    return new ResponseEntity<>(userMapper.userToUserDto(userService.getById(id)), HttpStatus.OK);
   }
 }

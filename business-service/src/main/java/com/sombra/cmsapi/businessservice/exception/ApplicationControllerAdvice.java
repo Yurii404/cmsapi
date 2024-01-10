@@ -34,7 +34,7 @@ public class ApplicationControllerAdvice {
 
   @ExceptionHandler(NotAllowedOperationException.class)
   public ResponseEntity<String> handleNotAllowedOperationException(
-      MethodArgumentNotValidException ex) {
+      NotAllowedOperationException ex) {
     return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 }

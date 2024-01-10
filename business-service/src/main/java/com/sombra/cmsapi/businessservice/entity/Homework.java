@@ -1,5 +1,7 @@
 package com.sombra.cmsapi.businessservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -28,10 +30,12 @@ public class Homework {
 
   @ManyToOne
   @JoinColumn(name = "lesson_id", nullable = false)
+  @JsonBackReference
   private Lesson lesson;
 
   private String task;
 
   @OneToMany(mappedBy = "homework")
+  @JsonManagedReference
   private List<CompletedHomework> completedHomeworks;
 }

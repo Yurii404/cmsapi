@@ -16,22 +16,23 @@ import com.sombra.cmsapi.businessservice.repository.CourseFeedbackRepository;
 import com.sombra.cmsapi.businessservice.repository.CourseRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
 import java.util.List;
-import java.util.OptionalDouble;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
 public class CourseFeedbackService {
 
-  private static final int MINIMUM_GRADE_TO_PASS = 80;
-
   private final CourseFeedbackRepository courseFeedbackRepository;
   private final CourseRepository courseRepository;
   private final UserRepository userRepository;
   private final CompletedHomeworkRepository completedHomeworkRepository;
-
+  private final Logger LOGGER = LoggerFactory.getLogger(CourseFeedbackService.class);
   private final CourseFeedbackMapper courseFeedbackMapper = CourseFeedbackMapper.INSTANCE;
+
+  private static final int MINIMUM_GRADE_TO_PASS = 80;
 
   public CourseFeedbackDto save(CreateCourseFeedbackRequest requestDto) {
     User student = getStudentById(requestDto.getStudentId());
@@ -39,12 +40,13 @@ public class CourseFeedbackService {
 
     double finalGrade = countFinalGrade(student, course);
 
-    CourseFeedback courseFeedback = CourseFeedback.builder()
-        .course(course)
-        .student(student)
-        .finalMark((int) Math.round(finalGrade))
-        .status(finalGrade >= MINIMUM_GRADE_TO_PASS? CourseStatus.PASSED : CourseStatus.FAILED)
-        .build();
+    CourseFeedback courseFeedback =
+        CourseFeedback.builder()
+            .course(course)
+            .student(student)
+            .finalMark((int) Math.round(finalGrade))
+            .status(finalGrade >= MINIMUM_GRADE_TO_PASS ? CourseStatus.PASSED : CourseStatus.FAILED)
+            .build();
 
     CourseFeedback savedCourseFeedback = courseFeedbackRepository.save(courseFeedback);
 
@@ -52,17 +54,30 @@ public class CourseFeedbackService {
   }
 
   private double countFinalGrade(User student, Course course) {
-    List<Homework> allHomeworks = course.getLessons().stream()
-        .flatMap(lesson -> lesson.getHomeworks().stream())
-        .toList();
+    List<Homework> allHomeworks =
+        course.getLessons().stream().flatMap(lesson -> lesson.getHomeworks().stream()).toList();
 
     return allHomeworks.stream()
         .map(it -> getCompletedHomeworkByStudentAndHomework(student, it))
-        .mapToInt(CompletedHomework::getMark).average().getAsDouble();
+        .mapToInt(CompletedHomework::getMark)
+        .average()
+        .getAsDouble();
   }
 
+  public List<CourseFeedback> getAll() {
+    return courseFeedbackRepository.findAll();
+  }
 
-  public Course getCourseById(String courseId) {
+  public CourseFeedback getById(String id) {
+    return courseFeedbackRepository
+        .findById(id)
+        .orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("Course feedback with id: %s does not exist!", id)));
+  }
+
+  private Course getCourseById(String courseId) {
     return courseRepository
         .findById(courseId)
         .orElseThrow(
@@ -71,7 +86,7 @@ public class CourseFeedbackService {
                     String.format("Course with id: %s does not exist!", courseId)));
   }
 
-  public CompletedHomework getCompletedHomeworkByStudentAndHomework(User user, Homework homework) {
+  private CompletedHomework getCompletedHomeworkByStudentAndHomework(User user, Homework homework) {
     return completedHomeworkRepository
         .findFirsByStudentAndHomeworkOrderBySubmissionDateDesc(user, homework)
         .orElseThrow(

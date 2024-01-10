@@ -1,10 +1,8 @@
 package com.sombra.cmsapi.businessservice.repository;
 
 import com.sombra.cmsapi.businessservice.entity.CompletedHomework;
-import com.sombra.cmsapi.businessservice.entity.CourseFeedback;
 import com.sombra.cmsapi.businessservice.entity.Homework;
 import com.sombra.cmsapi.businessservice.entity.User;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

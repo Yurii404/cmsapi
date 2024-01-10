@@ -1,5 +1,6 @@
 package com.sombra.cmsapi.businessservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sombra.cmsapi.businessservice.enumerated.CourseStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,14 +33,16 @@ public class CourseFeedback {
 
   @ManyToOne
   @JoinColumn(name = "student_id", nullable = false)
+  @JsonBackReference
   private User student;
 
   @ManyToOne
-  @JoinColumn(name = "instructor_id", nullable = false)
+  @JoinColumn(name = "instructor_id")
   private User instructor;
 
   @ManyToOne
   @JoinColumn(name = "course_id", nullable = false)
+  @JsonBackReference
   private Course course;
 
   @Enumerated(EnumType.STRING)
@@ -48,6 +51,5 @@ public class CourseFeedback {
   private int finalMark;
   private String content;
 
-  @CreationTimestamp
-  private ZonedDateTime created;
+  @CreationTimestamp private ZonedDateTime created;
 }

@@ -16,7 +16,7 @@ public class CourseDto {
   private String id;
   private String name;
   private String description;
-  private List<User> students;
+  private List<User> studentsIds;
   private List<User> instructors;
   private List<Lesson> lessons;
   private List<CourseFeedback> feedbacks;

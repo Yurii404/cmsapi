@@ -16,15 +16,20 @@ import com.sombra.cmsapi.businessservice.repository.LessonRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class CourseService {
 
   private final CourseRepository courseRepository;
   private final UserRepository userRepository;
   private final LessonRepository lessonRepository;
+  private final Logger LOGGER = LoggerFactory.getLogger(CourseService.class);
   private final CourseMapper courseMapper = CourseMapper.INSTANCE;
 
   public CourseDto save(CreateCourseRequest createCourseRequest) {
@@ -49,17 +54,28 @@ public class CourseService {
     Course course = getById(requestDto.getCourseId());
     User instructor = getInstructorById(requestDto.getInstructorId());
 
-    course.getInstructors().add(instructor);
+    if (!course.getInstructors().contains(instructor)) {
+      course.getInstructors().add(instructor);
 
-    Course savedCourse = courseRepository.save(course);
+      Course savedCourse = courseRepository.save(course);
 
-    return courseMapper.courseToCourseDto(savedCourse);
+      return courseMapper.courseToCourseDto(savedCourse);
+    } else {
+      LOGGER.warn(
+          String.format(
+              "Instructor with id %s is already teaching course with id %s",
+              instructor.getId(), course.getId()));
+      throw new NotAllowedOperationException(
+          String.format(
+              "Instructor with id %s is already teaching course with id %s",
+              instructor.getId(), course.getId()));
+    }
   }
 
   public CourseDto withdrawInstructor(WithdrawInstructorRequest requestDto) {
     Course course = getById(requestDto.getCourseId());
 
-    if(course.getInstructors().size() > 1) {
+    if (course.getInstructors().size() > 1) {
       User instructor = getInstructorById(requestDto.getInstructorId());
 
       course.getInstructors().remove(instructor);
@@ -67,9 +83,14 @@ public class CourseService {
       Course savedCourse = courseRepository.save(course);
 
       return courseMapper.courseToCourseDto(savedCourse);
-    }else {
+    } else {
+      LOGGER.warn("Course must have at least one instructor!");
       throw new NotAllowedOperationException("Course must have at least one instructor!");
     }
+  }
+
+  public List<Course> getAll() {
+    return courseRepository.findAll();
   }
 
   public Course getById(String courseId) {
@@ -98,7 +119,4 @@ public class CourseService {
                 new EntityNotFoundException(
                     String.format("Lesson with id: %s does not exist!", lessonId)));
   }
-
-
-
 }
