@@ -1,6 +1,6 @@
 package com.sombra.cmsapi.businessservice.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,10 +39,9 @@ public class CompletedHomework {
 
   @ManyToOne
   @JoinColumn(name = "homework_id", nullable = false)
-  @JsonBackReference
+  @JsonIgnore
   private Homework homework;
 
-  // todo store as blob
   @Lob
   @Column(columnDefinition = "blob")
   private byte[] homeworkFile;

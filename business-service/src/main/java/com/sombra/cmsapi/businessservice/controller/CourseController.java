@@ -1,9 +1,7 @@
 package com.sombra.cmsapi.businessservice.controller;
 
-import com.sombra.cmsapi.businessservice.dto.course.AssignInstructorRequest;
 import com.sombra.cmsapi.businessservice.dto.course.CourseDto;
 import com.sombra.cmsapi.businessservice.dto.course.CreateCourseRequest;
-import com.sombra.cmsapi.businessservice.dto.course.WithdrawInstructorRequest;
 import com.sombra.cmsapi.businessservice.mapper.CourseMapper;
 import com.sombra.cmsapi.businessservice.service.CourseService;
 import jakarta.validation.Valid;
@@ -50,16 +48,32 @@ public class CourseController {
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  @PutMapping("/instructors/assign")
+  @PutMapping("/{courseId}/instructors/assign/{instructorId}")
   public ResponseEntity<CourseDto> assignInstructor(
-      @Valid @RequestBody AssignInstructorRequest requestDto) {
-    return new ResponseEntity<>(courseService.assignInstructor(requestDto), HttpStatus.OK);
+      @PathVariable String courseId, @PathVariable String instructorId) {
+    return new ResponseEntity<>(courseService.assignInstructor(courseId, instructorId),
+        HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  @PutMapping("/instructors/withdraw")
+  @PutMapping("/{courseId}/instructors/withdraw/{instructorId}")
   public ResponseEntity<CourseDto> withdrawInstructor(
-      @Valid @RequestBody WithdrawInstructorRequest requestDto) {
-    return new ResponseEntity<>(courseService.withdrawInstructor(requestDto), HttpStatus.OK);
+      @PathVariable String courseId, @PathVariable String instructorId) {
+    return new ResponseEntity<>(courseService.withdrawInstructor(courseId, instructorId),
+        HttpStatus.OK);
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'STUDENT')")
+  @PutMapping("/{courseId}/students/register/{studentId}")
+  public ResponseEntity<CourseDto> registerStudent(
+      @PathVariable String courseId, @PathVariable String studentId) {
+    return new ResponseEntity<>(courseService.registerStudent(courseId, studentId), HttpStatus.OK);
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'STUDENT')")
+  @PutMapping("/{courseId}/students/remove/{studentId}")
+  public ResponseEntity<CourseDto> removeStudent(
+      @PathVariable String courseId, @PathVariable String studentId) {
+    return new ResponseEntity<>(courseService.removeStudent(courseId, studentId), HttpStatus.OK);
   }
 }

@@ -1,7 +1,6 @@
 package com.sombra.cmsapi.businessservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -36,6 +35,5 @@ public class Homework {
   private String task;
 
   @OneToMany(mappedBy = "homework")
-  @JsonManagedReference
   private List<CompletedHomework> completedHomeworks;
 }

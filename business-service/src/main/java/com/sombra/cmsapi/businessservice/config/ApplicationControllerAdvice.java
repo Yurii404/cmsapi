@@ -1,5 +1,7 @@
-package com.sombra.cmsapi.businessservice.exception;
+package com.sombra.cmsapi.businessservice.config;
 
+import com.sombra.cmsapi.businessservice.exception.EntityNotFoundException;
+import com.sombra.cmsapi.businessservice.exception.NotAllowedOperationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
