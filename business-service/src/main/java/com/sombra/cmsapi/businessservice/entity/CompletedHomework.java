@@ -46,7 +46,7 @@ public class CompletedHomework {
   @Column(columnDefinition = "blob")
   private byte[] homeworkFile;
 
-  private int mark;
+  private Integer mark;
   private String comment;
 
   @CreationTimestamp private ZonedDateTime submissionDate;

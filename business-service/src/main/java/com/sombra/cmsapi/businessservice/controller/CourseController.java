@@ -51,26 +51,26 @@ public class CourseController {
   @PutMapping("/{courseId}/instructors/assign/{instructorId}")
   public ResponseEntity<CourseDto> assignInstructor(
       @PathVariable String courseId, @PathVariable String instructorId) {
-    return new ResponseEntity<>(courseService.assignInstructor(courseId, instructorId),
-        HttpStatus.OK);
+    return new ResponseEntity<>(
+        courseService.assignInstructor(courseId, instructorId), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @PutMapping("/{courseId}/instructors/withdraw/{instructorId}")
   public ResponseEntity<CourseDto> withdrawInstructor(
       @PathVariable String courseId, @PathVariable String instructorId) {
-    return new ResponseEntity<>(courseService.withdrawInstructor(courseId, instructorId),
-        HttpStatus.OK);
+    return new ResponseEntity<>(
+        courseService.withdrawInstructor(courseId, instructorId), HttpStatus.OK);
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN', 'STUDENT')")
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'STUDENT', 'INSTRUCTOR')")
   @PutMapping("/{courseId}/students/register/{studentId}")
   public ResponseEntity<CourseDto> registerStudent(
       @PathVariable String courseId, @PathVariable String studentId) {
     return new ResponseEntity<>(courseService.registerStudent(courseId, studentId), HttpStatus.OK);
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN', 'STUDENT')")
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'STUDENT', 'INSTRUCTOR')")
   @PutMapping("/{courseId}/students/remove/{studentId}")
   public ResponseEntity<CourseDto> removeStudent(
       @PathVariable String courseId, @PathVariable String studentId) {

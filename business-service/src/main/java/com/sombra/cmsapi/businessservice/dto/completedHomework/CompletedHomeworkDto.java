@@ -17,7 +17,7 @@ public class CompletedHomeworkDto {
   private User instructor;
   private Homework homework;
   private byte[] homeworkFile;
-  private int mark;
+  private Integer mark;
   private String comment;
   private ZonedDateTime submissionDate;
   private ZonedDateTime reviewDate;

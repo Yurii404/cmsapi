@@ -1,5 +1,6 @@
 package com.sombra.cmsapi.businessservice.controller;
 
+import com.sombra.cmsapi.businessservice.dto.completedHomework.CheckHomeworkRequest;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CompletedHomeworkDto;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CreateCompletedHomeworkRequest;
 import com.sombra.cmsapi.businessservice.mapper.CompletedHomeworkMapper;
@@ -14,6 +15,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,5 +55,14 @@ public class CompletedHomeworkController {
         completedHomeworkMapper.completedHomeworkToCompletedHomeworkDto(
             completedHomeworkService.getById(id)),
         HttpStatus.OK);
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR')")
+  @PutMapping("/{completedHomeworkId}")
+  public ResponseEntity<CompletedHomeworkDto> checkHomework(
+      @PathVariable String completedHomeworkId,
+      @Valid @RequestBody CheckHomeworkRequest requestDto) {
+    return new ResponseEntity<>(
+        completedHomeworkService.checkHomework(completedHomeworkId, requestDto), HttpStatus.OK);
   }
 }

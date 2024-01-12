@@ -1,5 +1,6 @@
 package com.sombra.cmsapi.businessservice.service;
 
+import com.sombra.cmsapi.businessservice.dto.completedHomework.CheckHomeworkRequest;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CompletedHomeworkDto;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CreateCompletedHomeworkRequest;
 import com.sombra.cmsapi.businessservice.entity.CompletedHomework;
@@ -8,11 +9,13 @@ import com.sombra.cmsapi.businessservice.entity.User;
 import com.sombra.cmsapi.businessservice.enumerated.UserRole;
 import com.sombra.cmsapi.businessservice.exception.BrokenFileException;
 import com.sombra.cmsapi.businessservice.exception.EntityNotFoundException;
+import com.sombra.cmsapi.businessservice.exception.NotAllowedOperationException;
 import com.sombra.cmsapi.businessservice.mapper.CompletedHomeworkMapper;
 import com.sombra.cmsapi.businessservice.repository.CompletedHomeworkRepository;
 import com.sombra.cmsapi.businessservice.repository.HomeworkRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +60,38 @@ public class CompletedHomeworkService {
     }
   }
 
+  public CompletedHomeworkDto checkHomework(
+      String completedHomeworkId, CheckHomeworkRequest requestDto) {
+    CompletedHomework completedHomework = getById(completedHomeworkId);
+    User instructor = getInstructorById(requestDto.getInstructorId());
+
+    validateInstructorPermissions(instructor, completedHomework);
+
+    completedHomework.setMark(requestDto.getMark());
+    completedHomework.setReviewDate(ZonedDateTime.now());
+    completedHomework.setInstructor(instructor);
+    if (requestDto.getComment() != null) {
+      completedHomework.setComment(requestDto.getComment());
+    }
+
+    CompletedHomework savedCompletedHomework = completedHomeworkRepository.save(completedHomework);
+    return completedHomeworkMapper.completedHomeworkToCompletedHomeworkDto(savedCompletedHomework);
+  }
+
+  private void validateInstructorPermissions(User instructor, CompletedHomework completedHomework) {
+    if (!completedHomework
+        .getHomework()
+        .getLesson()
+        .getCourse()
+        .getInstructors()
+        .contains(instructor)) {
+      throw new NotAllowedOperationException(
+          String.format(
+              "Instructor with id %s does not teaches the course this homework belongs.",
+              instructor.getId()));
+    }
+  }
+
   public List<CompletedHomework> getAll() {
     return completedHomeworkRepository.findAll();
   }
@@ -77,6 +112,15 @@ public class CompletedHomeworkService {
             () ->
                 new EntityNotFoundException(
                     String.format("Student with id: %s does not exist!", userId)));
+  }
+
+  private User getInstructorById(String userId) {
+    return userRepository
+        .findByIdAndRole(userId, UserRole.INSTRUCTOR)
+        .orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("Instructor with id: %s does not exist!", userId)));
   }
 
   private Homework getHomeworkById(String homeworkId) {

@@ -1,6 +1,5 @@
 package com.sombra.cmsapi.businessservice.service;
 
-
 import com.sombra.cmsapi.businessservice.dto.course.CourseDto;
 import com.sombra.cmsapi.businessservice.dto.course.CreateCourseRequest;
 import com.sombra.cmsapi.businessservice.entity.Course;
@@ -117,17 +116,19 @@ public class CourseService {
     validateStudentLimit(student);
 
     if (course.getStudents().contains(student)) {
-      throw new NotAllowedOperationException(String.format(
-          "Student with id %s is already registered for this course with id %s.",
-          student.getId(), course.getId()));
+      throw new NotAllowedOperationException(
+          String.format(
+              "Student with id %s is already registered for this course with id %s.",
+              student.getId(), course.getId()));
     }
   }
 
   private void validateStudentRemoving(Course course, User student) {
     if (!course.getStudents().contains(student)) {
-      throw new NotAllowedOperationException(String.format(
-          "Student with id %s is not registered for the course with id %s.",
-          student.getId(), course.getId()));
+      throw new NotAllowedOperationException(
+          String.format(
+              "Student with id %s is not registered for the course with id %s.",
+              student.getId(), course.getId()));
     }
   }
 
@@ -136,9 +137,10 @@ public class CourseService {
         courseRepository.findAllCoursesByStudent(student.getId());
 
     if (coursesForStudent.isPresent() && coursesForStudent.get().size() >= 5) {
-      throw new NotAllowedOperationException(String.format(
-          "Student with id %s has reached the maximum number of course registrations.",
-          student.getId()));
+      throw new NotAllowedOperationException(
+          String.format(
+              "Student with id %s has reached the maximum number of course registrations.",
+              student.getId()));
     }
   }
 
@@ -181,6 +183,4 @@ public class CourseService {
                 new EntityNotFoundException(
                     String.format("Lesson with id: %s does not exist!", lessonId)));
   }
-
-
 }
