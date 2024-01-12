@@ -1,5 +1,6 @@
 package com.sombra.cmsapi.businessservice.service;
 
+import com.sombra.cmsapi.businessservice.dto.completedHomework.CheckHomeworkRequest;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CourseFeedbackDto;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CreateCourseFeedbackRequest;
 import com.sombra.cmsapi.businessservice.entity.CompletedHomework;
@@ -47,6 +48,18 @@ public class CourseFeedbackService {
             .finalMark((int) Math.round(finalGrade))
             .status(finalGrade >= MINIMUM_GRADE_TO_PASS ? CourseStatus.PASSED : CourseStatus.FAILED)
             .build();
+
+    CourseFeedback savedCourseFeedback = courseFeedbackRepository.save(courseFeedback);
+
+    return courseFeedbackMapper.courseFeedbackToCourseFeedbackDto(savedCourseFeedback);
+  }
+
+  public CourseFeedbackDto leaveFeedback(String courseFeedbackId, CheckHomeworkRequest requestDto) {
+    CourseFeedback courseFeedback = getById(courseFeedbackId);
+    User instructor = getInstructorById(requestDto.getInstructorId());
+
+    courseFeedback.setComment(requestDto.getComment());
+    courseFeedback.setInstructor(instructor);
 
     CourseFeedback savedCourseFeedback = courseFeedbackRepository.save(courseFeedback);
 
@@ -104,5 +117,14 @@ public class CourseFeedbackService {
             () ->
                 new EntityNotFoundException(
                     String.format("Student with id: %s does not exist!", userId)));
+  }
+
+  private User getInstructorById(String userId) {
+    return userRepository
+        .findByIdAndRole(userId, UserRole.INSTRUCTOR)
+        .orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("Instructor with id: %s does not exist!", userId)));
   }
 }

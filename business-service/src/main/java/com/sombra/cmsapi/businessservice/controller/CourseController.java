@@ -2,6 +2,8 @@ package com.sombra.cmsapi.businessservice.controller;
 
 import com.sombra.cmsapi.businessservice.dto.course.CourseDto;
 import com.sombra.cmsapi.businessservice.dto.course.CreateCourseRequest;
+import com.sombra.cmsapi.businessservice.dto.lesson.LessonDto;
+import com.sombra.cmsapi.businessservice.dto.user.UserDto;
 import com.sombra.cmsapi.businessservice.mapper.CourseMapper;
 import com.sombra.cmsapi.businessservice.service.CourseService;
 import jakarta.validation.Valid;
@@ -46,6 +48,18 @@ public class CourseController {
   public ResponseEntity<CourseDto> getById(@PathVariable String id) {
     return new ResponseEntity<>(
         courseMapper.courseToCourseDto(courseService.getById(id)), HttpStatus.OK);
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR')")
+  @GetMapping("/{courseId}/students")
+  public ResponseEntity<List<UserDto>> getStudentsByCourseId(@PathVariable String courseId) {
+    return new ResponseEntity<>(courseService.getStudentsByCourseId(courseId), HttpStatus.OK);
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR', 'STUDENT')")
+  @GetMapping("/{courseId}/lessons")
+  public ResponseEntity<List<LessonDto>> getLessonsByCourseId(@PathVariable String courseId) {
+    return new ResponseEntity<>(courseService.getLessonsByCourseId(courseId), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR', 'STUDENT')")

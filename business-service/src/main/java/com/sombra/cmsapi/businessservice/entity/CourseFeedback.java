@@ -48,8 +48,8 @@ public class CourseFeedback {
   @Enumerated(EnumType.STRING)
   private CourseStatus status;
 
-  private int finalMark;
-  private String content;
+  private Integer finalMark;
+  private String comment;
 
   @CreationTimestamp private ZonedDateTime created;
 }

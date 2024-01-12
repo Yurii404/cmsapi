@@ -1,5 +1,6 @@
 package com.sombra.cmsapi.businessservice.controller;
 
+import com.sombra.cmsapi.businessservice.dto.completedHomework.CheckHomeworkRequest;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CourseFeedbackDto;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CreateCourseFeedbackRequest;
 import com.sombra.cmsapi.businessservice.mapper.CourseFeedbackMapper;
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +32,14 @@ public class CourseFeedbackController {
   public ResponseEntity<CourseFeedbackDto> create(
       @Valid @RequestBody CreateCourseFeedbackRequest requestDto) {
     return new ResponseEntity<>(courseFeedbackService.save(requestDto), HttpStatus.OK);
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR')")
+  @PutMapping("/{courseFeedbackId}")
+  public ResponseEntity<CourseFeedbackDto> leaveFeedback(
+      @PathVariable String courseFeedbackId, @Valid @RequestBody CheckHomeworkRequest requestDto) {
+    return new ResponseEntity<>(
+        courseFeedbackService.leaveFeedback(courseFeedbackId, requestDto), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
