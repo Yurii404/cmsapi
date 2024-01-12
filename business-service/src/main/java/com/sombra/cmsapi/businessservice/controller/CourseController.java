@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -45,6 +46,13 @@ public class CourseController {
   public ResponseEntity<CourseDto> getById(@PathVariable String id) {
     return new ResponseEntity<>(
         courseMapper.courseToCourseDto(courseService.getById(id)), HttpStatus.OK);
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR', 'STUDENT')")
+  @GetMapping("/search")
+  public ResponseEntity<List<CourseDto>> getAllBySearch(
+      @RequestParam String searchQuery, @RequestParam String searchField) {
+    return new ResponseEntity<>(courseService.search(searchField, searchQuery), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")

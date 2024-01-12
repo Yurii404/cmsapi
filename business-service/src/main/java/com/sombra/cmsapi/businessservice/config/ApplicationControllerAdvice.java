@@ -2,6 +2,7 @@ package com.sombra.cmsapi.businessservice.config;
 
 import com.sombra.cmsapi.businessservice.exception.EntityNotFoundException;
 import com.sombra.cmsapi.businessservice.exception.NotAllowedOperationException;
+import com.sombra.cmsapi.businessservice.exception.WrongSearchFieldException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,11 @@ public class ApplicationControllerAdvice {
 
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(WrongSearchFieldException.class)
+  public ResponseEntity<String> handleWrongSearchFieldException(WrongSearchFieldException ex) {
     return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
   }
 

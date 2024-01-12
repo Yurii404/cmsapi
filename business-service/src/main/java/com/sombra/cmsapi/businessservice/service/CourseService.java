@@ -8,10 +8,12 @@ import com.sombra.cmsapi.businessservice.entity.User;
 import com.sombra.cmsapi.businessservice.enumerated.UserRole;
 import com.sombra.cmsapi.businessservice.exception.EntityNotFoundException;
 import com.sombra.cmsapi.businessservice.exception.NotAllowedOperationException;
+import com.sombra.cmsapi.businessservice.exception.WrongSearchFieldException;
 import com.sombra.cmsapi.businessservice.mapper.CourseMapper;
 import com.sombra.cmsapi.businessservice.repository.CourseRepository;
 import com.sombra.cmsapi.businessservice.repository.LessonRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -133,8 +135,7 @@ public class CourseService {
   }
 
   private void validateStudentLimit(User student) {
-    Optional<List<Course>> coursesForStudent =
-        courseRepository.findAllCoursesByStudent(student.getId());
+    Optional<List<Course>> coursesForStudent = courseRepository.findByStudentsId(student.getId());
 
     if (coursesForStudent.isPresent() && coursesForStudent.get().size() >= 5) {
       throw new NotAllowedOperationException(
@@ -142,6 +143,23 @@ public class CourseService {
               "Student with id %s has reached the maximum number of course registrations.",
               student.getId()));
     }
+  }
+
+  public List<CourseDto> search(String searchField, String searchQuery) {
+    Optional<List<Course>> searchResult;
+
+    if ("instructorId".equals(searchField)) {
+      searchResult = courseRepository.findByInstructorsId(searchQuery);
+    } else if ("studentId".equals(searchField)) {
+      searchResult = courseRepository.findByStudentsId(searchQuery);
+    } else {
+      throw new WrongSearchFieldException(
+          String.format("The search is not allowed for the field %s", searchField));
+    }
+
+    return searchResult
+        .map(courses -> courses.stream().map(courseMapper::courseToCourseDto).toList())
+        .orElse(Collections.emptyList());
   }
 
   public List<Course> getAll() {
