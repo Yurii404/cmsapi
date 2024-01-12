@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CompletedHomeworkRepository extends JpaRepository<CompletedHomework, String> {
-  Optional<CompletedHomework> findFirsByStudentAndHomeworkOrderBySubmissionDateDesc(
+  Optional<CompletedHomework> findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(
       User student, Homework homework);
 }

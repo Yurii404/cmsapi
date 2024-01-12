@@ -11,6 +11,7 @@ import com.sombra.cmsapi.businessservice.entity.User;
 import com.sombra.cmsapi.businessservice.enumerated.CourseStatus;
 import com.sombra.cmsapi.businessservice.enumerated.UserRole;
 import com.sombra.cmsapi.businessservice.exception.EntityNotFoundException;
+import com.sombra.cmsapi.businessservice.exception.NotAllowedOperationException;
 import com.sombra.cmsapi.businessservice.mapper.CourseFeedbackMapper;
 import com.sombra.cmsapi.businessservice.repository.CompletedHomeworkRepository;
 import com.sombra.cmsapi.businessservice.repository.CourseFeedbackRepository;
@@ -72,7 +73,13 @@ public class CourseFeedbackService {
 
     return allHomeworks.stream()
         .map(it -> getCompletedHomeworkByStudentAndHomework(student, it))
-        .mapToInt(CompletedHomework::getMark)
+        .mapToInt(completedHomework -> {
+          Integer mark = completedHomework.getMark();
+          if (mark == null) {
+            throw new NotAllowedOperationException("");
+          }
+          return mark;
+        })
         .average()
         .getAsDouble();
   }
@@ -101,7 +108,7 @@ public class CourseFeedbackService {
 
   private CompletedHomework getCompletedHomeworkByStudentAndHomework(User user, Homework homework) {
     return completedHomeworkRepository
-        .findFirsByStudentAndHomeworkOrderBySubmissionDateDesc(user, homework)
+        .findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(user, homework)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(
