@@ -1,5 +1,6 @@
 package com.sombra.cmsapi.businessservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,8 +48,10 @@ public class Course {
   private List<User> instructors;
 
   @OneToMany(mappedBy = "course")
+  @JsonManagedReference
   private List<Lesson> lessons;
 
   @OneToMany(mappedBy = "course")
+  @JsonManagedReference
   private List<CourseFeedback> feedbacks;
 }

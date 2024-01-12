@@ -1,5 +1,6 @@
 package com.sombra.cmsapi.businessservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sombra.cmsapi.businessservice.enumerated.UserRole;
 import jakarta.persistence.*;
 import java.util.List;
@@ -28,6 +29,7 @@ public class User {
   private String password;
 
   @OneToMany(mappedBy = "student")
+  @JsonManagedReference
   private List<CourseFeedback> feedbacks;
 
   @Enumerated(EnumType.STRING)

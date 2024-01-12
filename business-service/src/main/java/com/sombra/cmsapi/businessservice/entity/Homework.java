@@ -1,5 +1,6 @@
 package com.sombra.cmsapi.businessservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -7,7 +8,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,10 +29,10 @@ public class Homework {
 
   @ManyToOne
   @JoinColumn(name = "lesson_id", nullable = false)
+  @JsonBackReference
   private Lesson lesson;
 
   private String task;
-  private ZonedDateTime submissionDate;
 
   @OneToMany(mappedBy = "homework")
   private List<CompletedHomework> completedHomeworks;
