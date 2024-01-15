@@ -1,12 +1,10 @@
 package com.sombra.cmsapi.businessservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
@@ -42,9 +40,7 @@ public class CompletedHomework {
   @JsonIgnore
   private Homework homework;
 
-  @Lob
-  @Column(columnDefinition = "blob")
-  private byte[] homeworkFile;
+  private String homeworkFileUrl;
 
   private Integer mark;
   private String comment;

@@ -124,6 +124,10 @@ public class CourseService {
     validateStudentLimit(student);
 
     if (course.getStudents().contains(student)) {
+      LOGGER.warn(
+          String.format(
+              "Student with id %s is already registered for this course with id %s.",
+              student.getId(), course.getId()));
       throw new NotAllowedOperationException(
           String.format(
               "Student with id %s is already registered for this course with id %s.",
@@ -133,6 +137,10 @@ public class CourseService {
 
   private void validateStudentRemoving(Course course, User student) {
     if (!course.getStudents().contains(student)) {
+      LOGGER.warn(
+          String.format(
+              "Student with id %s is not registered for the course with id %s.",
+              student.getId(), course.getId()));
       throw new NotAllowedOperationException(
           String.format(
               "Student with id %s is not registered for the course with id %s.",
@@ -144,6 +152,10 @@ public class CourseService {
     Optional<List<Course>> coursesForStudent = courseRepository.findByStudentsId(student.getId());
 
     if (coursesForStudent.isPresent() && coursesForStudent.get().size() >= 5) {
+      LOGGER.warn(
+          String.format(
+              "Student with id %s has reached the maximum number of course registrations.",
+              student.getId()));
       throw new NotAllowedOperationException(
           String.format(
               "Student with id %s has reached the maximum number of course registrations.",
@@ -159,6 +171,7 @@ public class CourseService {
     } else if ("studentId".equals(searchField)) {
       searchResult = courseRepository.findByStudentsId(searchQuery);
     } else {
+      LOGGER.warn(String.format("The search is not allowed for the field %s", searchField));
       throw new WrongSearchFieldException(
           String.format("The search is not allowed for the field %s", searchField));
     }

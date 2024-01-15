@@ -30,6 +30,9 @@ eureka:
     preferIpAddress: true
 
 security:
+  aws:
+    accessKey: AKIAQ3EGUAWYQ7FQC7OL
+    secretKey: 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
   jwt:
     secret: b656cbcc7b32b1f94a9e38ebabfb2ab3925f420416413bdc2f7a94b0bc4e2579
     expiration: 86400
