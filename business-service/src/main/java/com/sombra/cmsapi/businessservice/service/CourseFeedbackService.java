@@ -73,13 +73,14 @@ public class CourseFeedbackService {
 
     return allHomeworks.stream()
         .map(it -> getCompletedHomeworkByStudentAndHomework(student, it))
-        .mapToInt(completedHomework -> {
-          Integer mark = completedHomework.getMark();
-          if (mark == null) {
-            throw new NotAllowedOperationException("");
-          }
-          return mark;
-        })
+        .mapToInt(
+            completedHomework -> {
+              Integer mark = completedHomework.getMark();
+              if (mark == null) {
+                throw new NotAllowedOperationException("");
+              }
+              return mark;
+            })
         .average()
         .getAsDouble();
   }
