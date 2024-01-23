@@ -1,9 +1,9 @@
 package com.sombra.cmsapi.businessservice.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sombra.cmsapi.businessservice.entity.BucketObjectRepresentation;
-import java.io.*;
+import java.io.File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
