@@ -1,9 +1,9 @@
 package com.sombra.cmsapi.businessservice.service;
 
+import com.sombra.cmsapi.businessservice.dto.BucketObjectRepresentation;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CheckHomeworkRequest;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CompletedHomeworkDto;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CreateCompletedHomeworkRequest;
-import com.sombra.cmsapi.businessservice.entity.BucketObjectRepresentation;
 import com.sombra.cmsapi.businessservice.entity.CompletedHomework;
 import com.sombra.cmsapi.businessservice.entity.Homework;
 import com.sombra.cmsapi.businessservice.entity.User;
@@ -26,6 +26,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -98,7 +100,7 @@ public class CompletedHomeworkService {
 
   public CompletedHomeworkDto checkHomework(
       String completedHomeworkId, CheckHomeworkRequest requestDto) {
-    CompletedHomework completedHomework = getById(completedHomeworkId);
+    CompletedHomework completedHomework = getCompletedHomeworkById(completedHomeworkId);
     User instructor = getInstructorById(requestDto.getInstructorId());
 
     validateInstructorPermissions(instructor, completedHomework);
@@ -128,11 +130,15 @@ public class CompletedHomeworkService {
     }
   }
 
-  public List<CompletedHomework> getAll() {
-    return completedHomeworkRepository.findAll();
+  public Page<CompletedHomeworkDto> getAll(Pageable pageable) {
+    return completedHomeworkRepository.findAll(pageable).map(completedHomeworkMapper::completedHomeworkToCompletedHomeworkDto);
   }
 
-  public CompletedHomework getById(String id) {
+  public CompletedHomeworkDto getById(String id) {
+    return completedHomeworkMapper.completedHomeworkToCompletedHomeworkDto(getCompletedHomeworkById(id));
+  }
+
+  private CompletedHomework getCompletedHomeworkById(String id) {
     return completedHomeworkRepository
         .findById(id)
         .orElseThrow(

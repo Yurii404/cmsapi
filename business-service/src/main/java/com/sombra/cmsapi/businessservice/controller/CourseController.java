@@ -9,6 +9,8 @@ import com.sombra.cmsapi.businessservice.service.CourseService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CourseController {
 
   private final CourseService courseService;
-  private final CourseMapper courseMapper = CourseMapper.INSTANCE;
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
@@ -37,17 +38,14 @@ public class CourseController {
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping
-  public ResponseEntity<List<CourseDto>> getAll() {
-    return new ResponseEntity<>(
-        courseService.getAll().stream().map(courseMapper::courseToCourseDto).toList(),
-        HttpStatus.OK);
+  public ResponseEntity<Page<CourseDto>> getAll(Pageable pageable) {
+    return new ResponseEntity<>(courseService.getAll(pageable), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping("/{id}")
   public ResponseEntity<CourseDto> getById(@PathVariable String id) {
-    return new ResponseEntity<>(
-        courseMapper.courseToCourseDto(courseService.getById(id)), HttpStatus.OK);
+    return new ResponseEntity<>(courseService.getById(id), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR')")
@@ -64,9 +62,9 @@ public class CourseController {
 
   @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR', 'STUDENT')")
   @GetMapping("/search")
-  public ResponseEntity<List<CourseDto>> getAllBySearch(
+  public ResponseEntity<Page<CourseDto>> getAllBySearch(Pageable pageable,
       @RequestParam String searchQuery, @RequestParam String searchField) {
-    return new ResponseEntity<>(courseService.search(searchField, searchQuery), HttpStatus.OK);
+    return new ResponseEntity<>(courseService.search(searchField, searchQuery, pageable), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")

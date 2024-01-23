@@ -1,6 +1,6 @@
 package com.sombra.cmsapi.businessservice.config.filter;
 
-import com.sombra.cmsapi.businessservice.entity.AuthUserDetails;
+import com.sombra.cmsapi.businessservice.dto.AuthUserDetails;
 import com.sombra.cmsapi.businessservice.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

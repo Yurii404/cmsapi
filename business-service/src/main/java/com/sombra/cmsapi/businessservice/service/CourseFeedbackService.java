@@ -21,6 +21,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -31,7 +33,6 @@ public class CourseFeedbackService {
   private final CourseRepository courseRepository;
   private final UserRepository userRepository;
   private final CompletedHomeworkRepository completedHomeworkRepository;
-  private final Logger LOGGER = LoggerFactory.getLogger(CourseFeedbackService.class);
   private final CourseFeedbackMapper courseFeedbackMapper = CourseFeedbackMapper.INSTANCE;
 
   private static final int MINIMUM_GRADE_TO_PASS = 80;
@@ -56,7 +57,7 @@ public class CourseFeedbackService {
   }
 
   public CourseFeedbackDto leaveFeedback(String courseFeedbackId, CheckHomeworkRequest requestDto) {
-    CourseFeedback courseFeedback = getById(courseFeedbackId);
+    CourseFeedback courseFeedback = getCourseFeedbackById(courseFeedbackId);
     User instructor = getInstructorById(requestDto.getInstructorId());
 
     courseFeedback.setComment(requestDto.getComment());
@@ -85,11 +86,15 @@ public class CourseFeedbackService {
         .getAsDouble();
   }
 
-  public List<CourseFeedback> getAll() {
-    return courseFeedbackRepository.findAll();
+  public Page<CourseFeedbackDto> getAll(Pageable pageable) {
+    return courseFeedbackRepository.findAll(pageable).map(courseFeedbackMapper::courseFeedbackToCourseFeedbackDto);
   }
 
-  public CourseFeedback getById(String id) {
+  public CourseFeedbackDto getById(String id) {
+    return courseFeedbackMapper.courseFeedbackToCourseFeedbackDto(getCourseFeedbackById(id));
+  }
+
+  private CourseFeedback getCourseFeedbackById(String id) {
     return courseFeedbackRepository
         .findById(id)
         .orElseThrow(

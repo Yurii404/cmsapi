@@ -3,10 +3,10 @@ package com.sombra.cmsapi.businessservice.controller;
 import com.sombra.cmsapi.businessservice.dto.user.ChangeUserRoleDto;
 import com.sombra.cmsapi.businessservice.dto.user.UserDto;
 import com.sombra.cmsapi.businessservice.dto.user.UserRegisterDto;
-import com.sombra.cmsapi.businessservice.mapper.UserMapper;
 import com.sombra.cmsapi.businessservice.service.UserService;
-import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserService userService;
-  private final UserMapper userMapper = UserMapper.INSTANCE;
 
   @PostMapping("/register")
   public ResponseEntity<UserDto> register(@RequestBody UserRegisterDto requestDto) {
@@ -39,14 +38,13 @@ public class UserController {
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping
-  public ResponseEntity<List<UserDto>> getAll() {
-    return new ResponseEntity<>(
-        userService.getAll().stream().map(userMapper::userToUserDto).toList(), HttpStatus.OK);
+  public ResponseEntity<Page<UserDto>> getAll(Pageable pageable) {
+    return new ResponseEntity<>(userService.getAll(pageable), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping("/{id}")
   public ResponseEntity<UserDto> getById(@PathVariable String id) {
-    return new ResponseEntity<>(userMapper.userToUserDto(userService.getById(id)), HttpStatus.OK);
+    return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
   }
 }

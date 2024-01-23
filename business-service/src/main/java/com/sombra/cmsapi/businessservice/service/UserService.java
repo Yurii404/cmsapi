@@ -7,11 +7,12 @@ import com.sombra.cmsapi.businessservice.entity.User;
 import com.sombra.cmsapi.businessservice.exception.EntityNotFoundException;
 import com.sombra.cmsapi.businessservice.mapper.UserMapper;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
   private final UserMapper userMapper = UserMapper.INSTANCE;
 
   public UserDto save(UserRegisterDto registerDto) {
@@ -43,13 +43,14 @@ public class UserService {
     return userMapper.userToUserDto(userRepository.save(userFromRep));
   }
 
-  public List<User> getAll() {
-    return userRepository.findAll();
+  public Page<UserDto> getAll(Pageable pageable) {
+    return userRepository.findAll(pageable).map(userMapper::userToUserDto);
   }
 
-  public User getById(String userId) {
+  public UserDto getById(String userId) {
     return userRepository
         .findById(userId)
+        .map(userMapper::userToUserDto)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(

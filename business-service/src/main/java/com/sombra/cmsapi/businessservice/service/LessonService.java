@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -23,7 +25,6 @@ public class LessonService {
 
   private final LessonRepository lessonRepository;
   private final CourseRepository courseRepository;
-  private final Logger LOGGER = LoggerFactory.getLogger(LessonService.class);
   private final LessonMapper lessonMapper = LessonMapper.INSTANCE;
 
   public LessonDto save(CreateLessonRequest createLessonRequest) {
@@ -79,13 +80,14 @@ public class LessonService {
     return lessonMapper.lessonToLessonDto(lessonRepository.save(lessonFromRep));
   }
 
-  public List<Lesson> getAll() {
-    return lessonRepository.findAll();
+  public Page<LessonDto> getAll(Pageable pageable) {
+    return lessonRepository.findAll(pageable).map(lessonMapper::lessonToLessonDto);
   }
 
-  public Lesson getById(String userId) {
+  public LessonDto getById(String userId) {
     return lessonRepository
         .findById(userId)
+        .map(lessonMapper::lessonToLessonDto)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(
