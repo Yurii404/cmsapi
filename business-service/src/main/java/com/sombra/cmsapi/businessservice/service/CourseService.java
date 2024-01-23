@@ -17,7 +17,6 @@ import com.sombra.cmsapi.businessservice.mapper.UserMapper;
 import com.sombra.cmsapi.businessservice.repository.CourseRepository;
 import com.sombra.cmsapi.businessservice.repository.LessonRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -186,7 +185,9 @@ public class CourseService {
   }
 
   public List<LessonDto> getLessonsByCourseId(String courseId) {
-    return getCourseById(courseId).getLessons().stream().map(lessonMapper::lessonToLessonDto).toList();
+    return getCourseById(courseId).getLessons().stream()
+        .map(lessonMapper::lessonToLessonDto)
+        .toList();
   }
 
   public Page<CourseDto> getAll(Pageable pageable) {
@@ -196,7 +197,6 @@ public class CourseService {
   public CourseDto getById(String courseId) {
     return courseMapper.courseToCourseDto(getCourseById(courseId));
   }
-
 
   private Course getCourseById(String courseId) {
     return courseRepository

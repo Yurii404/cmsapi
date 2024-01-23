@@ -19,8 +19,6 @@ import com.sombra.cmsapi.businessservice.repository.CourseRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -87,7 +85,9 @@ public class CourseFeedbackService {
   }
 
   public Page<CourseFeedbackDto> getAll(Pageable pageable) {
-    return courseFeedbackRepository.findAll(pageable).map(courseFeedbackMapper::courseFeedbackToCourseFeedbackDto);
+    return courseFeedbackRepository
+        .findAll(pageable)
+        .map(courseFeedbackMapper::courseFeedbackToCourseFeedbackDto);
   }
 
   public CourseFeedbackDto getById(String id) {

@@ -4,7 +4,6 @@ import com.sombra.cmsapi.businessservice.dto.course.CourseDto;
 import com.sombra.cmsapi.businessservice.dto.course.CreateCourseRequest;
 import com.sombra.cmsapi.businessservice.dto.lesson.LessonDto;
 import com.sombra.cmsapi.businessservice.dto.user.UserDto;
-import com.sombra.cmsapi.businessservice.mapper.CourseMapper;
 import com.sombra.cmsapi.businessservice.service.CourseService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -62,9 +61,10 @@ public class CourseController {
 
   @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR', 'STUDENT')")
   @GetMapping("/search")
-  public ResponseEntity<Page<CourseDto>> getAllBySearch(Pageable pageable,
-      @RequestParam String searchQuery, @RequestParam String searchField) {
-    return new ResponseEntity<>(courseService.search(searchField, searchQuery, pageable), HttpStatus.OK);
+  public ResponseEntity<Page<CourseDto>> getAllBySearch(
+      Pageable pageable, @RequestParam String searchQuery, @RequestParam String searchField) {
+    return new ResponseEntity<>(
+        courseService.search(searchField, searchQuery, pageable), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")

@@ -31,6 +31,8 @@ eureka:
 
 security:
   aws:
+    bucketName: cmsapi
+    bucketFolderName: homeworks
     accessKey: AKIAQ3EGUAWYQ7FQC7OL
     secretKey: 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
   jwt:
