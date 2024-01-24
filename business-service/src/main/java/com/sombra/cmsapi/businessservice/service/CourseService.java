@@ -17,6 +17,7 @@ import com.sombra.cmsapi.businessservice.mapper.UserMapper;
 import com.sombra.cmsapi.businessservice.repository.CourseRepository;
 import com.sombra.cmsapi.businessservice.repository.LessonRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,7 @@ public class CourseService {
   private final UserMapper userMapper = UserMapper.INSTANCE;
   private final LessonMapper lessonMapper = LessonMapper.INSTANCE;
 
+  @Transactional
   public CourseDto save(CreateCourseRequest createCourseRequest) {
     List<User> instructors =
         createCourseRequest.getInstructorIds().stream().map(this::getInstructorById).toList();

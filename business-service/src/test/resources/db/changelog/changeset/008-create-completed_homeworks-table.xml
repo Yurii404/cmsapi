@@ -1,0 +1,40 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="Yurii Kupchyn" id="create-completed_homeworks-table">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="completed_homeworks"/>
+            </not>
+        </preConditions>
+        <createTable tableName="completed_homeworks">
+            <column name="id" type="VARCHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="pk_lessons" nullable="false"/>
+            </column>
+            <column name="comment" type="VARCHAR(255)"/>
+            <column name="homework_file_url" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mark" type="int"/>
+            <column name="review_date" type="datetime(6)"/>
+            <column name="submission_date" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="homework_id" type="VARCHAR(36)">
+                <constraints nullable="false"
+                             foreignKeyName="fk_completed_homeworks_homework"
+                             references="homeworks(id)"/>
+            </column>
+            <column name="instructor_id" type="VARCHAR(36)">
+                <constraints foreignKeyName="fk_completed_homeworks_instructor"
+                  references="users(id)"/>
+            </column>
+            <column name="student_id" type="VARCHAR(36)">
+                <constraints nullable="false"
+                  foreignKeyName="fk_completed_homeworks_student"
+                  references="users(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
