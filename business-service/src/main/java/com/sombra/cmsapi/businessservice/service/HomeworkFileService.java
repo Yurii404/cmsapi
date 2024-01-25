@@ -18,10 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class HomeworkFileService {
 
-  @Value("${aws.bucketName}")
+  @Value("${security.aws.bucketName}")
   private String BUCKET_NAME;
 
-  @Value("${aws.bucketFolderName}")
+  @Value("${security.aws.bucketFolderName}")
   private String BUCKET_FOLDER_NAME;
 
   private final AWSS3BucketService awss3BucketService;

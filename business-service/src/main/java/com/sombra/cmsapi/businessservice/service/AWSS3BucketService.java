@@ -31,7 +31,7 @@ public class AWSS3BucketService {
       // Generate the URL for the uploaded file
       return amazonS3Client.getUrl(bucketName, objectName).toExternalForm();
     } catch (Exception e) {
-      LOGGER.error("Some error has occurred.", e);
+      LOGGER.error("Failed to upload file to S3.", e);
       throw new FileUploadingExceptionException("Failed to upload file to S3");
     }
   }

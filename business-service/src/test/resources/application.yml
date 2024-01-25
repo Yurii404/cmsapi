@@ -1,2 +1,45 @@
+spring:
+  application:
+    name: business-service
+  cloud:
+    discovery:
+      enabled: false
+    config:
+      discovery:
+        enabled: false
+      enabled: false
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/cmsapi
+    username: root
+    password: SuperSecretPassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+security:
+  aws:
+    bucketName: cmsapi
+    bucketFolderName: homeworks
+    accessKey: AKIAQ3EGUAWYQ7FQC7OL
+    secretKey: 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
+  jwt:
+    secret: b656cbcc7b32b1f94a9e38ebabfb2ab3925f420416413bdc2f7a94b0bc4e2579
+    expiration: 86400
+server:
+  port: 8764
+
 
 
