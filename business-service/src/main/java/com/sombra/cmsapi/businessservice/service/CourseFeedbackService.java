@@ -1,8 +1,8 @@
 package com.sombra.cmsapi.businessservice.service;
 
-import com.sombra.cmsapi.businessservice.dto.completedHomework.CheckHomeworkRequest;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CourseFeedbackDto;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CreateCourseFeedbackRequest;
+import com.sombra.cmsapi.businessservice.dto.courseFeedback.LeaveCommentRequest;
 import com.sombra.cmsapi.businessservice.entity.CompletedHomework;
 import com.sombra.cmsapi.businessservice.entity.Course;
 import com.sombra.cmsapi.businessservice.entity.CourseFeedback;
@@ -11,7 +11,6 @@ import com.sombra.cmsapi.businessservice.entity.User;
 import com.sombra.cmsapi.businessservice.enumerated.CourseStatus;
 import com.sombra.cmsapi.businessservice.enumerated.UserRole;
 import com.sombra.cmsapi.businessservice.exception.EntityNotFoundException;
-import com.sombra.cmsapi.businessservice.exception.NotAllowedOperationException;
 import com.sombra.cmsapi.businessservice.mapper.CourseFeedbackMapper;
 import com.sombra.cmsapi.businessservice.repository.CompletedHomeworkRepository;
 import com.sombra.cmsapi.businessservice.repository.CourseFeedbackRepository;
@@ -54,7 +53,7 @@ public class CourseFeedbackService {
     return courseFeedbackMapper.courseFeedbackToCourseFeedbackDto(savedCourseFeedback);
   }
 
-  public CourseFeedbackDto leaveFeedback(String courseFeedbackId, CheckHomeworkRequest requestDto) {
+  public CourseFeedbackDto leaveFeedback(String courseFeedbackId, LeaveCommentRequest requestDto) {
     CourseFeedback courseFeedback = getCourseFeedbackById(courseFeedbackId);
     User instructor = getInstructorById(requestDto.getInstructorId());
 
@@ -72,14 +71,7 @@ public class CourseFeedbackService {
 
     return allHomeworks.stream()
         .map(it -> getCompletedHomeworkByStudentAndHomework(student, it))
-        .mapToInt(
-            completedHomework -> {
-              Integer mark = completedHomework.getMark();
-              if (mark == null) {
-                throw new NotAllowedOperationException("");
-              }
-              return mark;
-            })
+        .mapToInt(CompletedHomework::getMark)
         .average()
         .getAsDouble();
   }

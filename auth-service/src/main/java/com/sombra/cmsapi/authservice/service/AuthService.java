@@ -49,7 +49,7 @@ public class AuthService {
         .findByEmail(requestDto.getEmail())
         .ifPresent(
             user -> {
-              LOGGER.error("User with email {}} already exists", requestDto.getEmail());
+              LOGGER.error("User with email {} already exists", requestDto.getEmail());
               throw new EmailAlreadyExistsException(requestDto.getEmail());
             });
 

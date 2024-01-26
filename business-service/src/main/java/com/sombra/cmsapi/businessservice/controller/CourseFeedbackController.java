@@ -1,8 +1,8 @@
 package com.sombra.cmsapi.businessservice.controller;
 
-import com.sombra.cmsapi.businessservice.dto.completedHomework.CheckHomeworkRequest;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CourseFeedbackDto;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CreateCourseFeedbackRequest;
+import com.sombra.cmsapi.businessservice.dto.courseFeedback.LeaveCommentRequest;
 import com.sombra.cmsapi.businessservice.service.CourseFeedbackService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class CourseFeedbackController {
   @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR')")
   @PutMapping("/{courseFeedbackId}")
   public ResponseEntity<CourseFeedbackDto> leaveFeedback(
-      @PathVariable String courseFeedbackId, @Valid @RequestBody CheckHomeworkRequest requestDto) {
+      @PathVariable String courseFeedbackId, @Valid @RequestBody LeaveCommentRequest requestDto) {
     return new ResponseEntity<>(
         courseFeedbackService.leaveFeedback(courseFeedbackId, requestDto), HttpStatus.OK);
   }
