@@ -1,4 +1,4 @@
-package com.sombra.cmsapi.businessservice.entity;
+package com.sombra.cmsapi.businessservice.dto;
 
 import com.sombra.cmsapi.businessservice.enumerated.UserRole;
 import java.util.Collection;

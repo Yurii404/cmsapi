@@ -1,13 +1,13 @@
 package com.sombra.cmsapi.businessservice.controller;
 
-import com.sombra.cmsapi.businessservice.dto.completedHomework.CheckHomeworkRequest;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CourseFeedbackDto;
 import com.sombra.cmsapi.businessservice.dto.courseFeedback.CreateCourseFeedbackRequest;
-import com.sombra.cmsapi.businessservice.mapper.CourseFeedbackMapper;
+import com.sombra.cmsapi.businessservice.dto.courseFeedback.LeaveCommentRequest;
 import com.sombra.cmsapi.businessservice.service.CourseFeedbackService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CourseFeedbackController {
 
   private final CourseFeedbackService courseFeedbackService;
-  private final CourseFeedbackMapper courseFeedbackMapper = CourseFeedbackMapper.INSTANCE;
 
   @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR','STUDENT')")
   @PostMapping
@@ -37,26 +36,20 @@ public class CourseFeedbackController {
   @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR')")
   @PutMapping("/{courseFeedbackId}")
   public ResponseEntity<CourseFeedbackDto> leaveFeedback(
-      @PathVariable String courseFeedbackId, @Valid @RequestBody CheckHomeworkRequest requestDto) {
+      @PathVariable String courseFeedbackId, @Valid @RequestBody LeaveCommentRequest requestDto) {
     return new ResponseEntity<>(
         courseFeedbackService.leaveFeedback(courseFeedbackId, requestDto), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping
-  public ResponseEntity<List<CourseFeedbackDto>> getAll() {
-    return new ResponseEntity<>(
-        courseFeedbackService.getAll().stream()
-            .map(courseFeedbackMapper::courseFeedbackToCourseFeedbackDto)
-            .toList(),
-        HttpStatus.OK);
+  public ResponseEntity<Page<CourseFeedbackDto>> getAll(Pageable pageable) {
+    return new ResponseEntity<>(courseFeedbackService.getAll(pageable), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping("/{id}")
   public ResponseEntity<CourseFeedbackDto> getById(@PathVariable String id) {
-    return new ResponseEntity<>(
-        courseFeedbackMapper.courseFeedbackToCourseFeedbackDto(courseFeedbackService.getById(id)),
-        HttpStatus.OK);
+    return new ResponseEntity<>(courseFeedbackService.getById(id), HttpStatus.OK);
   }
 }

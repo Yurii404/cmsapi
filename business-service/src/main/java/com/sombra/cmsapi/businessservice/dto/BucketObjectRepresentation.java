@@ -1,4 +1,4 @@
-package com.sombra.cmsapi.businessservice.entity;
+package com.sombra.cmsapi.businessservice.dto;
 
 import java.io.File;
 import lombok.Builder;

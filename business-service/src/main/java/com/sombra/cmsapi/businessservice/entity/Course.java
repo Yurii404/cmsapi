@@ -44,7 +44,7 @@ public class Course {
   @JoinTable(
       name = "instructor_course",
       joinColumns = {@JoinColumn(name = "course_id")},
-      inverseJoinColumns = {@JoinColumn(name = "insturctor_id")})
+      inverseJoinColumns = {@JoinColumn(name = "instructor_id")})
   private List<User> instructors;
 
   @OneToMany(mappedBy = "course")

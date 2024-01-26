@@ -17,13 +17,15 @@ import com.sombra.cmsapi.businessservice.mapper.UserMapper;
 import com.sombra.cmsapi.businessservice.repository.CourseRepository;
 import com.sombra.cmsapi.businessservice.repository.LessonRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
-import java.util.Collections;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -39,6 +41,7 @@ public class CourseService {
   private final UserMapper userMapper = UserMapper.INSTANCE;
   private final LessonMapper lessonMapper = LessonMapper.INSTANCE;
 
+  @Transactional
   public CourseDto save(CreateCourseRequest createCourseRequest) {
     List<User> instructors =
         createCourseRequest.getInstructorIds().stream().map(this::getInstructorById).toList();
@@ -58,7 +61,7 @@ public class CourseService {
   }
 
   public CourseDto assignInstructor(String courseId, String instructorId) {
-    Course course = getById(courseId);
+    Course course = getCourseById(courseId);
     User instructor = getInstructorById(instructorId);
 
     if (!course.getInstructors().contains(instructor)) {
@@ -80,7 +83,7 @@ public class CourseService {
   }
 
   public CourseDto withdrawInstructor(String courseId, String instructorId) {
-    Course course = getById(courseId);
+    Course course = getCourseById(courseId);
 
     if (course.getInstructors().size() > 1) {
       User instructor = getInstructorById(instructorId);
@@ -97,7 +100,7 @@ public class CourseService {
   }
 
   public CourseDto registerStudent(String courseId, String studentId) {
-    Course course = getById(courseId);
+    Course course = getCourseById(courseId);
     User student = getStudentById(studentId);
 
     validateStudentRegistration(course, student);
@@ -109,7 +112,7 @@ public class CourseService {
   }
 
   public CourseDto removeStudent(String courseId, String studentId) {
-    Course course = getById(courseId);
+    Course course = getCourseById(courseId);
     User student = getStudentById(studentId);
 
     validateStudentRemoving(course, student);
@@ -163,37 +166,41 @@ public class CourseService {
     }
   }
 
-  public List<CourseDto> search(String searchField, String searchQuery) {
-    Optional<List<Course>> searchResult;
+  public Page<CourseDto> search(String searchField, String searchQuery, Pageable pageable) {
+    Page<Course> searchResult;
 
     if ("instructorId".equals(searchField)) {
-      searchResult = courseRepository.findByInstructorsId(searchQuery);
+      searchResult = courseRepository.findByInstructorsId(searchQuery, pageable);
     } else if ("studentId".equals(searchField)) {
-      searchResult = courseRepository.findByStudentsId(searchQuery);
+      searchResult = courseRepository.findByStudentsId(searchQuery, pageable);
     } else {
       LOGGER.warn(String.format("The search is not allowed for the field %s", searchField));
       throw new WrongSearchFieldException(
           String.format("The search is not allowed for the field %s", searchField));
     }
 
-    return searchResult
-        .map(courses -> courses.stream().map(courseMapper::courseToCourseDto).toList())
-        .orElse(Collections.emptyList());
+    return searchResult.map(courseMapper::courseToCourseDto);
   }
 
   public List<UserDto> getStudentsByCourseId(String courseId) {
-    return getById(courseId).getStudents().stream().map(userMapper::userToUserDto).toList();
+    return getCourseById(courseId).getStudents().stream().map(userMapper::userToUserDto).toList();
   }
 
   public List<LessonDto> getLessonsByCourseId(String courseId) {
-    return getById(courseId).getLessons().stream().map(lessonMapper::lessonToLessonDto).toList();
+    return getCourseById(courseId).getLessons().stream()
+        .map(lessonMapper::lessonToLessonDto)
+        .toList();
   }
 
-  public List<Course> getAll() {
-    return courseRepository.findAll();
+  public Page<CourseDto> getAll(Pageable pageable) {
+    return courseRepository.findAll(pageable).map(courseMapper::courseToCourseDto);
   }
 
-  public Course getById(String courseId) {
+  public CourseDto getById(String courseId) {
+    return courseMapper.courseToCourseDto(getCourseById(courseId));
+  }
+
+  private Course getCourseById(String courseId) {
     return courseRepository
         .findById(courseId)
         .orElseThrow(

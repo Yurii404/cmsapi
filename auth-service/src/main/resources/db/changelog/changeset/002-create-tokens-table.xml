@@ -2,30 +2,35 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <changeSet author="Yurii Kupchyn" id="create-user-table">
+    <changeSet author="Yurii Kupchyn" id="create-tokens-table">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="users"/>
+                <tableExists tableName="tokens"/>
             </not>
         </preConditions>
-        <createTable tableName="users">
+        <createTable tableName="tokens">
             <column name="id" type="VARCHAR(36)">
-                <constraints primaryKey="true" primaryKeyName="pk_user" nullable="false"/>
+                <constraints primaryKey="true" primaryKeyName="pk_tokens" nullable="false"/>
             </column>
-            <column name="email" type="VARCHAR(255)">
-                <constraints unique="true" nullable="false"/>
-            </column>
-            <column name="first_name" type="VARCHAR(255)">
+            <column name="access_token" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_name" type="VARCHAR(255)">
+            <column name="refresh_token" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="password" type="VARCHAR(255)">
+            <column name="expired" type="bit">
                 <constraints nullable="false"/>
             </column>
-            <column name="role" type="VARCHAR(255)">
+            <column name="revoked" type="bit">
                 <constraints nullable="false"/>
+            </column>
+            <column name="token_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(36)">
+                <constraints nullable="false"
+                             foreignKeyName="fk_token_user"
+                             references="users(id)"/>
             </column>
         </createTable>
     </changeSet>

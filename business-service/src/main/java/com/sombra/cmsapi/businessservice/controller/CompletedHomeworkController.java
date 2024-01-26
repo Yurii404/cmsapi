@@ -3,12 +3,12 @@ package com.sombra.cmsapi.businessservice.controller;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CheckHomeworkRequest;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CompletedHomeworkDto;
 import com.sombra.cmsapi.businessservice.dto.completedHomework.CreateCompletedHomeworkRequest;
-import com.sombra.cmsapi.businessservice.mapper.CompletedHomeworkMapper;
 import com.sombra.cmsapi.businessservice.service.CompletedHomeworkService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class CompletedHomeworkController {
 
   private final CompletedHomeworkService completedHomeworkService;
-  private final CompletedHomeworkMapper completedHomeworkMapper = CompletedHomeworkMapper.INSTANCE;
 
   @PreAuthorize("hasAnyAuthority('ADMIN', 'STUDENT')")
   @PostMapping
@@ -40,21 +39,14 @@ public class CompletedHomeworkController {
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping
-  public ResponseEntity<List<CompletedHomeworkDto>> getAll() {
-    return new ResponseEntity<>(
-        completedHomeworkService.getAll().stream()
-            .map(completedHomeworkMapper::completedHomeworkToCompletedHomeworkDto)
-            .toList(),
-        HttpStatus.OK);
+  public ResponseEntity<Page<CompletedHomeworkDto>> getAll(Pageable pageable) {
+    return new ResponseEntity<>(completedHomeworkService.getAll(pageable), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping("/{id}")
   public ResponseEntity<CompletedHomeworkDto> getById(@PathVariable String id) {
-    return new ResponseEntity<>(
-        completedHomeworkMapper.completedHomeworkToCompletedHomeworkDto(
-            completedHomeworkService.getById(id)),
-        HttpStatus.OK);
+    return new ResponseEntity<>(completedHomeworkService.getById(id), HttpStatus.OK);
   }
 
   @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR')")

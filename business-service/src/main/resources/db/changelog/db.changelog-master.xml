@@ -4,5 +4,12 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
-    <include file="classpath:db/changelog/changeset/001-create-user-table.xml"/>
+    <include file="classpath:db/changelog/changeset/001-create-users-table.xml"/>
+    <include file="classpath:db/changelog/changeset/002-create-courses-table.xml"/>
+    <include file="classpath:db/changelog/changeset/003-create-instructor_course-table.xml"/>
+    <include file="classpath:db/changelog/changeset/004-create-student_course-table.xml"/>
+    <include file="classpath:db/changelog/changeset/005-create-lessons-table.xml"/>
+    <include file="classpath:db/changelog/changeset/006-create-homeworks-table.xml"/>
+    <include file="classpath:db/changelog/changeset/007-create-course_feedbacks-table.xml"/>
+    <include file="classpath:db/changelog/changeset/008-create-completed_homeworks-table.xml"/>
 </databaseChangeLog>

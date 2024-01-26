@@ -8,11 +8,10 @@ import com.sombra.cmsapi.businessservice.exception.EntityNotFoundException;
 import com.sombra.cmsapi.businessservice.mapper.HomeworkMapper;
 import com.sombra.cmsapi.businessservice.repository.HomeworkRepository;
 import com.sombra.cmsapi.businessservice.repository.LessonRepository;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -22,7 +21,6 @@ public class HomeworkService {
 
   private final LessonRepository lessonRepository;
   private final HomeworkRepository homeworkRepository;
-  private final Logger LOGGER = LoggerFactory.getLogger(HomeworkService.class);
   private final HomeworkMapper homeworkMapper = HomeworkMapper.INSTANCE;
 
   public HomeworkDto save(CreateHomeworkRequest createHomeworkRequest) {
@@ -34,13 +32,14 @@ public class HomeworkService {
     return homeworkMapper.homeworkToHomeworkDto(homeworkRepository.save(homeworkToSave));
   }
 
-  public List<Homework> getAll() {
-    return homeworkRepository.findAll();
+  public Page<HomeworkDto> getAll(Pageable pageable) {
+    return homeworkRepository.findAll(pageable).map(homeworkMapper::homeworkToHomeworkDto);
   }
 
-  public Homework getById(String userId) {
+  public HomeworkDto getById(String userId) {
     return homeworkRepository
         .findById(userId)
+        .map(homeworkMapper::homeworkToHomeworkDto)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(

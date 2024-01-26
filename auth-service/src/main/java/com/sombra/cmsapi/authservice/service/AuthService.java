@@ -17,6 +17,8 @@ import com.sombra.cmsapi.authservice.repository.UserRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,16 +38,18 @@ public class AuthService {
   private final TokenRepository tokenRepository;
   private final AuthenticationManager authenticationManager;
   private final UserMapper userMapper = UserMapper.INSTANCE;
+  private final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
 
   public AuthResponseDto register(UserRegisterDto requestDto) {
     // Do check if the role is valid
-    UserRole userRole = getRoleOrThrow(requestDto);
+    validateUserRole(requestDto);
 
     // Do check if the user with the email already exist
     userRepository
         .findByEmail(requestDto.getEmail())
         .ifPresent(
             user -> {
+              LOGGER.error("User with email {} already exists", requestDto.getEmail());
               throw new EmailAlreadyExistsException(requestDto.getEmail());
             });
 
@@ -66,6 +70,7 @@ public class AuthService {
 
       return AuthResponseDto.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     } catch (Exception ex) {
+      LOGGER.error("User was not registered: {}", ex.getMessage(), ex);
       throw new UserNotRegisteredException(
           String.format("User was not registered: %s", ex.getMessage()), ex);
     }
@@ -87,15 +92,13 @@ public class AuthService {
     return AuthResponseDto.builder().accessToken(accessToken).refreshToken(refreshToken).build();
   }
 
-  private static UserRole getRoleOrThrow(UserRegisterDto request) {
-    UserRole userRole;
+  private void validateUserRole(UserRegisterDto request) {
     try {
-      userRole = UserRole.valueOf(request.getRole().name().toUpperCase());
+      UserRole.valueOf(request.getRole().name().toUpperCase());
     } catch (IllegalArgumentException ex) {
-      log.error("Invalid role: {}, Ex: {}", request.getRole(), ex.getMessage());
+      LOGGER.error("Invalid role: {}, Ex: {}", request.getRole(), ex.getMessage());
       throw new RoleNotFoundException(request.getRole().name());
     }
-    return userRole;
   }
 
   private void revokeAllUserTokens(User user) {
