@@ -3,6 +3,7 @@ package com.sombra.cmsapi.businessservice.config;
 import com.sombra.cmsapi.businessservice.exception.EntityNotFoundException;
 import com.sombra.cmsapi.businessservice.exception.NotAllowedOperationException;
 import com.sombra.cmsapi.businessservice.exception.WrongSearchFieldException;
+import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +33,13 @@ public class ApplicationControllerAdvice {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<String> handleMethodArgumentNotValidException(
       MethodArgumentNotValidException ex) {
-    String errorMessage =
+    String errorMessages =
         ex.getBindingResult().getFieldErrors().stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
-            .findFirst()
-            .orElse("Validation error");
+            .collect(Collectors.joining(";\n "));
+
+    String errorMessage = errorMessages.isEmpty() ? "Validation error" : errorMessages;
+
     return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
   }
 

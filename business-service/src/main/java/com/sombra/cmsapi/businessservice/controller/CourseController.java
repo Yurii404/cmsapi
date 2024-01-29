@@ -32,7 +32,7 @@ public class CourseController {
   @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
   public ResponseEntity<CourseDto> create(@Valid @RequestBody CreateCourseRequest requestDto) {
-    return new ResponseEntity<>(courseService.save(requestDto), HttpStatus.OK);
+    return new ResponseEntity<>(courseService.save(requestDto), HttpStatus.CREATED);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")

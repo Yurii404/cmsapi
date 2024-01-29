@@ -27,7 +27,7 @@ public class HomeworkController {
   @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
   public ResponseEntity<HomeworkDto> create(@Valid @RequestBody CreateHomeworkRequest requestDto) {
-    return new ResponseEntity<>(homeworkService.save(requestDto), HttpStatus.OK);
+    return new ResponseEntity<>(homeworkService.save(requestDto), HttpStatus.CREATED);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
