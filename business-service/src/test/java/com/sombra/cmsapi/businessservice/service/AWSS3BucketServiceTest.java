@@ -28,6 +28,7 @@ class AWSS3BucketServiceTest {
 
   @Test
   void Should_PutObject_When_ValidData() throws IOException {
+    // SETUP
     String bucketName = "testBucket";
     String objectName = "testObject";
     String expectedUrl = "https://s3-yourfile.com";
@@ -40,14 +41,17 @@ class AWSS3BucketServiceTest {
     when(amazonS3.putObject(any())).thenReturn(new PutObjectResult());
     when(amazonS3.getUrl(bucketName, objectName)).thenReturn(new URL(expectedUrl));
 
+    // ACT
     String result = awss3BucketService.putObject(bucketName, bucketObjectRepresentation);
 
+    // VERIFY
     assertNotNull(result);
     assertEquals(expectedUrl, result);
   }
 
   @Test
   void Should_FileUploadingExceptionException_When_UploadFailed() throws IOException {
+    // SETUP
     String bucketName = "testBucket";
     String objectName = "testObject";
     BucketObjectRepresentation bucketObjectRepresentation =
@@ -56,6 +60,7 @@ class AWSS3BucketServiceTest {
             .file(File.createTempFile("file", "test"))
             .build();
 
+    // ACT
     FileUploadingExceptionException thrown =
         Assertions.assertThrows(
             FileUploadingExceptionException.class,
@@ -63,6 +68,7 @@ class AWSS3BucketServiceTest {
               awss3BucketService.putObject(bucketName, bucketObjectRepresentation);
             });
 
+    // VERIFY
     Assertions.assertEquals("Failed to upload file to S3", thrown.getMessage());
   }
 }

@@ -4,6 +4,7 @@ import com.sombra.cmsapi.businessservice.dto.user.ChangeUserRoleDto;
 import com.sombra.cmsapi.businessservice.dto.user.UserDto;
 import com.sombra.cmsapi.businessservice.dto.user.UserRegisterDto;
 import com.sombra.cmsapi.businessservice.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,13 +27,13 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/register")
-  public ResponseEntity<UserDto> register(@RequestBody UserRegisterDto requestDto) {
-    return new ResponseEntity<>(userService.save(requestDto), HttpStatus.OK);
+  public ResponseEntity<UserDto> register(@Valid @RequestBody UserRegisterDto requestDto) {
+    return new ResponseEntity<>(userService.save(requestDto), HttpStatus.CREATED);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
   @PutMapping("/role")
-  public ResponseEntity<UserDto> changeUserRole(@RequestBody ChangeUserRoleDto requestDto) {
+  public ResponseEntity<UserDto> changeUserRole(@Valid @RequestBody ChangeUserRoleDto requestDto) {
     return new ResponseEntity<>(userService.updateUserRole(requestDto), HttpStatus.OK);
   }
 

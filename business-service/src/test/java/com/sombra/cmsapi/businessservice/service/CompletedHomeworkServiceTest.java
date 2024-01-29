@@ -52,6 +52,7 @@ class CompletedHomeworkServiceTest {
 
   @Test
   void Should_Save_When_ValidData() throws IOException {
+    // SETUP
     String testUrl = "https://test.url";
     MultipartFile file =
         new MockMultipartFile("testFile", "testFile.txt", "text/plain", "Hello, World!".getBytes());
@@ -70,8 +71,10 @@ class CompletedHomeworkServiceTest {
     ArgumentCaptor<CompletedHomework> argumentCaptor =
         ArgumentCaptor.forClass(CompletedHomework.class);
 
+    // ACT
     completedHomeworkService.save(request, file);
 
+    // VERIFY
     verify(homeworkRepository, times(1)).findById(any());
     verify(homeworkFileService, times(1)).saveHomeworkFileToS3(any(), any(), any());
     verify(userRepository, times(1)).findByIdAndRole(any(), any());
@@ -84,6 +87,7 @@ class CompletedHomeworkServiceTest {
   @Test
   void Should_ThrowBrokenFileExceptionOnSave_When_SomethingWentWrongWithUpload()
       throws IOException {
+    // SETUP
     MultipartFile file =
         new MockMultipartFile("testFile", "testFile.txt", "text/plain", "Hello, World!".getBytes());
     CreateCompletedHomeworkRequest request =
@@ -96,15 +100,18 @@ class CompletedHomeworkServiceTest {
     when(homeworkFileService.saveHomeworkFileToS3(any(), any(), any()))
         .thenThrow(new IOException("Something went wrong!"));
 
+    // ACT
     BrokenFileException thrown =
         Assertions.assertThrows(
             BrokenFileException.class, () -> completedHomeworkService.save(request, file));
 
+    // VERIFY
     Assertions.assertEquals("Something went wrong when reading file.", thrown.getMessage());
   }
 
   @Test
   void Should_CheckHomework_When_ValidData() {
+    // SETUP
     CheckHomeworkRequest request =
         CheckHomeworkRequest.builder().mark(100).instructorId("1111").comment("Nice Job!").build();
     User instructor = User.builder().id("1111").build();
@@ -121,8 +128,10 @@ class CompletedHomeworkServiceTest {
     ArgumentCaptor<CompletedHomework> argumentCaptor =
         ArgumentCaptor.forClass(CompletedHomework.class);
 
+    // ACT
     completedHomeworkService.checkHomework("1111", request);
 
+    // VERIFY
     verify(completedHomeworkRepository, times(1)).findById(any());
     verify(userRepository, times(1)).findByIdAndRole(any(), any());
     verify(completedHomeworkRepository, times(1)).save(argumentCaptor.capture());
@@ -133,7 +142,7 @@ class CompletedHomeworkServiceTest {
 
   @Test
   void Should_NotThrowOnValidateInstructorPermissions_When_IsTeacher() {
-
+    // SETUP
     User instructor = User.builder().id("1111").build();
 
     Course course =
@@ -143,13 +152,14 @@ class CompletedHomeworkServiceTest {
     Homework homework = Homework.builder().id("1111").lesson(lesson).build();
     CompletedHomework completedHomework = CompletedHomework.builder().homework(homework).build();
 
+    // ACT
     ReflectionTestUtils.invokeMethod(
         completedHomeworkService, "validateInstructorPermissions", instructor, completedHomework);
   }
 
   @Test
   void Should_ThrowNotAllowedOperationExceptionOnValidateInstructorPermissions_When_DoNotTeach() {
-
+    // SETUP
     User instructor = User.builder().id("1111").build();
 
     Course course = Course.builder().id("1111").instructors(new ArrayList<>()).build();
@@ -158,6 +168,7 @@ class CompletedHomeworkServiceTest {
     Homework homework = Homework.builder().id("1111").lesson(lesson).build();
     CompletedHomework completedHomework = CompletedHomework.builder().homework(homework).build();
 
+    // ACT
     NotAllowedOperationException thrown =
         Assertions.assertThrows(
             NotAllowedOperationException.class,
@@ -168,6 +179,7 @@ class CompletedHomeworkServiceTest {
                     instructor,
                     completedHomework));
 
+    // VERIFY
     Assertions.assertEquals(
         "Instructor with id 1111 does not teaches the course this homework belongs.",
         thrown.getMessage());
@@ -175,10 +187,12 @@ class CompletedHomeworkServiceTest {
 
   @Test
   void Should_ThrowEntityNotFoundExceptionOnGetHomeworkById_When_DoesNotExist() {
+    // SETUP
     String homeworkId = "nonExistentId";
 
     when(homeworkRepository.findById(any())).thenReturn(Optional.empty());
 
+    // ACT
     EntityNotFoundException thrown =
         Assertions.assertThrows(
             EntityNotFoundException.class,
@@ -187,28 +201,34 @@ class CompletedHomeworkServiceTest {
                   completedHomeworkService, "getHomeworkById", homeworkId);
             });
 
+    // VERIFY
     Assertions.assertEquals("Homework with id: nonExistentId does not exist!", thrown.getMessage());
   }
 
   @Test
   void Should_GetHomeworkById_When_Exists() {
+    // SETUP
     String homeworkId = "nonExistentId";
     Homework homework = Homework.builder().id("1111").build();
 
     when(homeworkRepository.findById(any())).thenReturn(Optional.of(homework));
 
+    // ACT
     Homework result =
         ReflectionTestUtils.invokeMethod(completedHomeworkService, "getHomeworkById", homeworkId);
 
+    // VERIFY
     assertEquals(result, homework);
   }
 
   @Test
   void Should_ThrowEntityNotFoundExceptionOnGetInstructorById_When_DoesNotExist() {
+    // SETUP
     String instructorId = "nonExistentId";
 
     when(userRepository.findByIdAndRole(any(), any())).thenReturn(Optional.empty());
 
+    // ACT
     EntityNotFoundException thrown =
         Assertions.assertThrows(
             EntityNotFoundException.class,
@@ -217,30 +237,36 @@ class CompletedHomeworkServiceTest {
                   completedHomeworkService, "getInstructorById", instructorId);
             });
 
+    // VERIFY
     Assertions.assertEquals(
         "Instructor with id: nonExistentId does not exist!", thrown.getMessage());
   }
 
   @Test
   void Should_GetInstructorById_When_Exists() {
+    // SETUP
     String instructorId = "nonExistentId";
     User instructor = User.builder().id("1111").role(UserRole.INSTRUCTOR).build();
 
     when(userRepository.findByIdAndRole(any(), any())).thenReturn(Optional.of(instructor));
 
+    // ACT
     User result =
         ReflectionTestUtils.invokeMethod(
             completedHomeworkService, "getInstructorById", instructorId);
 
+    // VERIFY
     assertEquals(result, instructor);
   }
 
   @Test
   void Should_ThrowEntityNotFoundExceptionOnGetStudentById_When_DoesNotExist() {
+    // SETUP
     String studentId = "nonExistentId";
 
     when(userRepository.findByIdAndRole(any(), any())).thenReturn(Optional.empty());
 
+    // ACT
     EntityNotFoundException thrown =
         Assertions.assertThrows(
             EntityNotFoundException.class,
@@ -249,28 +275,34 @@ class CompletedHomeworkServiceTest {
                   completedHomeworkService, "getStudentById", studentId);
             });
 
+    // VERIFY
     Assertions.assertEquals("Student with id: nonExistentId does not exist!", thrown.getMessage());
   }
 
   @Test
   void Should_GetStudentById_When_Exists() {
+    // SETUP
     String studentId = "nonExistentId";
     User student = User.builder().id("1111").role(UserRole.STUDENT).build();
 
     when(userRepository.findByIdAndRole(any(), any())).thenReturn(Optional.of(student));
 
+    // ACT
     User result =
         ReflectionTestUtils.invokeMethod(completedHomeworkService, "getStudentById", studentId);
 
+    // VERIFY
     assertEquals(result, student);
   }
 
   @Test
   void Should_ThrowEntityNotFoundExceptionOnGetCompletedHomeworkById_When_DoesNotExist() {
+    // SETUP
     String completedHomeworkId = "nonExistentId";
 
     when(completedHomeworkRepository.findById(any())).thenReturn(Optional.empty());
 
+    // ACT
     EntityNotFoundException thrown =
         Assertions.assertThrows(
             EntityNotFoundException.class,
@@ -279,26 +311,31 @@ class CompletedHomeworkServiceTest {
                   completedHomeworkService, "getCompletedHomeworkById", completedHomeworkId);
             });
 
+    // VERIFY
     Assertions.assertEquals(
         "Completed homework with id: nonExistentId does not exist!", thrown.getMessage());
   }
 
   @Test
   void Should_GetCompletedHomeworkById_When_Exists() {
+    // SETUP
     String completedHomeworkId = "nonExistentId";
     CompletedHomework completedHomework = CompletedHomework.builder().id("1111").build();
 
     when(completedHomeworkRepository.findById(any())).thenReturn(Optional.of(completedHomework));
 
+    // ACT
     CompletedHomework result =
         ReflectionTestUtils.invokeMethod(
             completedHomeworkService, "getCompletedHomeworkById", completedHomeworkId);
 
+    // VERIFY
     assertEquals(result, completedHomework);
   }
 
   @Test
   void Should_GetAll_When_Exist() {
+    // SETUP
     CompletedHomework firstCompletedHomework = CompletedHomework.builder().id("1111").build();
     CompletedHomework secondCompletedHomework = CompletedHomework.builder().id("2222").build();
     CompletedHomework thirdCompletedHomework = CompletedHomework.builder().id("3333").build();
@@ -310,8 +347,10 @@ class CompletedHomeworkServiceTest {
     when(completedHomeworkRepository.findAll(any(Pageable.class)))
         .thenReturn(completedHomeworkPage);
 
+    // ACT
     Page<CompletedHomeworkDto> result = completedHomeworkService.getAll(Pageable.unpaged());
 
+    // VERIFY
     assertNotNull(result);
     assertEquals(result.getTotalElements(), completedHomeworkList.size());
     verify(completedHomeworkRepository, times(1)).findAll(any(Pageable.class));
@@ -319,28 +358,34 @@ class CompletedHomeworkServiceTest {
 
   @Test
   void Should_ThrowEntityNotFoundExceptionOnGetById_When_DoesNotExist() {
+    // SETUP
     String completedHomeworkId = "nonExistentId";
 
     when(completedHomeworkRepository.findById(any())).thenReturn(Optional.empty());
 
+    // ACT
     EntityNotFoundException thrown =
         Assertions.assertThrows(
             EntityNotFoundException.class,
             () -> completedHomeworkService.getById(completedHomeworkId));
 
+    // VERIFY
     Assertions.assertEquals(
         "Completed homework with id: nonExistentId does not exist!", thrown.getMessage());
   }
 
   @Test
   void Should_GetById_When_Exists() {
+    // SETUP
     String completedHomeworkId = "nonExistentId";
     CompletedHomework completedHomework = CompletedHomework.builder().id("1111").build();
 
     when(completedHomeworkRepository.findById(any())).thenReturn(Optional.of(completedHomework));
 
+    // ACT
     CompletedHomeworkDto result = completedHomeworkService.getById(completedHomeworkId);
 
+    // VERIFY
     assertNotNull(result);
     assertEquals(result.getId(), completedHomework.getId());
   }

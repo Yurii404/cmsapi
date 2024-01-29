@@ -30,7 +30,7 @@ public class CourseFeedbackController {
   @PostMapping
   public ResponseEntity<CourseFeedbackDto> create(
       @Valid @RequestBody CreateCourseFeedbackRequest requestDto) {
-    return new ResponseEntity<>(courseFeedbackService.save(requestDto), HttpStatus.OK);
+    return new ResponseEntity<>(courseFeedbackService.save(requestDto), HttpStatus.CREATED);
   }
 
   @PreAuthorize("hasAnyAuthority('ADMIN', 'INSTRUCTOR')")

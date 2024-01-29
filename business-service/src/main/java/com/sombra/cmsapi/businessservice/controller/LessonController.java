@@ -29,7 +29,7 @@ public class LessonController {
   @PostMapping
   @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<LessonDto> create(@Valid @RequestBody CreateLessonRequest requestDto) {
-    return new ResponseEntity<>(lessonService.save(requestDto), HttpStatus.OK);
+    return new ResponseEntity<>(lessonService.save(requestDto), HttpStatus.CREATED);
   }
 
   @PutMapping

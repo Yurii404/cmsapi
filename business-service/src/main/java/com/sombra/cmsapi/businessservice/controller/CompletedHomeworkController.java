@@ -34,7 +34,8 @@ public class CompletedHomeworkController {
   public ResponseEntity<CompletedHomeworkDto> create(
       @Valid @RequestPart("request") CreateCompletedHomeworkRequest requestDto,
       @NotEmpty @RequestPart("file") MultipartFile file) {
-    return new ResponseEntity<>(completedHomeworkService.save(requestDto, file), HttpStatus.OK);
+    return new ResponseEntity<>(
+        completedHomeworkService.save(requestDto, file), HttpStatus.CREATED);
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
