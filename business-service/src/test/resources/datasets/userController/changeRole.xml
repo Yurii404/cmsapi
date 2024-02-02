@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <users id="38f595e5-458b-4feb-86c0-ecc929a27005" email="userToChangeRole@gmail.com" first_name="John"
+    last_name="Doe" password="$2a$10$Yq8wMEatnjhRI8TSCB91cefaXPjAfE/xhOZajo6iNTxeyMnEEhybW"
+    role="ADMIN"/>
+</dataset>

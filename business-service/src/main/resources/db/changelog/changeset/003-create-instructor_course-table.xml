@@ -5,10 +5,10 @@
     <changeSet author="Yurii Kupchyn" id="create-instructor_course-table">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="instructor_course"/>
+                <tableExists tableName="instructor_course" catalogName="cmsapi"/>
             </not>
         </preConditions>
-        <createTable tableName="instructor_course">
+        <createTable tableName="instructor_course" catalogName="cmsapi">
             <column name="instructor_id" type="VARCHAR(36)">
                 <constraints nullable="false"
                   foreignKeyName="fk_instructor_user"
