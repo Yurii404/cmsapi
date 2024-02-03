@@ -11,12 +11,6 @@ spring:
     loadbalancer:
       ribbon:
         enabled: false
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/cmsapi
-    username: root
-    password: SuperSecretPassword
-    driver-class-name: com.mysql.cj.jdbc.Driver
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml

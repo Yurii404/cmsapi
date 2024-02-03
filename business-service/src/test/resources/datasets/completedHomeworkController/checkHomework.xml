@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <courses id="5cd171b4-2775-4667-94e9-f0c7aa2e2cd9"
+    description="Course for creating course feedback" name="Get Lesson"/>
+  <lessons id="25b75de8-b9c9-11ee-a506-0242ac120002" content="Test content" title="Test title"
+    course_id="5cd171b4-2775-4667-94e9-f0c7aa2e2cd9"/>
+  <homeworks id="2411dd96-b9ca-11ee-a506-0242ac120002" task="Test task"
+    lesson_id="25b75de8-b9c9-11ee-a506-0242ac120002"/>
+  <users id="38f595e5-458b-4feb-86c0-ecc929a27005" email="studentForCourseFeedback@gmail.com"
+    first_name="John"
+    last_name="Doe" password="$2a$10$Yq8wMEatnjhRI8TSCB91cefaXPjAfE/xhOZajo6iNTxeyMnEEhybW"
+    role="STUDENT"/>
+  <users id="38a595e5-458b-4feb-86c0-ecc929a27005" email="instructorForCourseFeedback@gmail.com"
+    first_name="John"
+    last_name="Doe" password="$2a$10$Yq8wMEatnjhRI8TSCB91cefaXPjAfE/xhOZajo6iNTxeyMnEEhybW"
+    role="INSTRUCTOR"/>
+  <instructor_course course_id="5cd171b4-2775-4667-94e9-f0c7aa2e2cd9"
+    instructor_id="38a595e5-458b-4feb-86c0-ecc929a27005"/>
+  <student_course course_id="5cd171b4-2775-4667-94e9-f0c7aa2e2cd9"
+    student_id="38f595e5-458b-4feb-86c0-ecc929a27005"/>
+  <completed_homeworks id="207d8aa2-b9cc-11ee-a506-0242ac120002"
+    homework_file_url="https://test.com"
+    mark="100"
+    submission_date="2024-01-12 14:54:00"
+    homework_id="2411dd96-b9ca-11ee-a506-0242ac120002"
+    student_id="38f595e5-458b-4feb-86c0-ecc929a27005"/>
+</dataset>

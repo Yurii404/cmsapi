@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <courses id="5cd171b4-2775-4667-94e9-f0c7aa2e2cd9"
+    description="Course for creating course feedback" name="Get Lesson"/>
+  <users id="37a595e5-458b-4feb-86c0-ecc929a27005" email="studentForCourseFeedback@gmail.com"
+    first_name="John"
+    last_name="Doe" password="$2a$10$Yq8wMEatnjhRI8TSCB91cefaXPjAfE/xhOZajo6iNTxeyMnEEhybW"
+    role="INSTRUCTOR"/>
+  <users id="38a595e5-458b-4feb-86c0-ecc929a27005" email="student2ForCourseFeedback@gmail.com"
+    first_name="John"
+    last_name="Doe" password="$2a$10$Yq8wMEatnjhRI8TSCB91cefaXPjAfE/xhOZajo6iNTxeyMnEEhybW"
+    role="INSTRUCTOR"/>
+  <instructor_course course_id="5cd171b4-2775-4667-94e9-f0c7aa2e2cd9"
+    instructor_id="37a595e5-458b-4feb-86c0-ecc929a27005"/>
+  <instructor_course course_id="5cd171b4-2775-4667-94e9-f0c7aa2e2cd9"
+    instructor_id="38a595e5-458b-4feb-86c0-ecc929a27005"/>
+</dataset>

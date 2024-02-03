@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <courses id="5cd171b4-2775-4667-94e9-f0c7aa2e2cd9" description="Course 1 for test course getting" name="Create Lesson"/>
+  <courses id="2cd171b4-2775-4667-94e9-f0c7aa2e2cd9" description="Course 2 for test course getting" name="Create Lesson"/>
+  <courses id="1cd171b4-2775-4667-94e9-f0c7aa2e2cd9" description="Course 3 for test course getting" name="Create Lesson"/>
+</dataset>

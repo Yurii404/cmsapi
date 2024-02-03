@@ -5,10 +5,10 @@
     <changeSet author="Yurii Kupchyn" id="create-users-table">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="users"/>
+                <tableExists tableName="users" catalogName="cmsapi"/>
             </not>
         </preConditions>
-        <createTable tableName="users">
+        <createTable tableName="users" catalogName="cmsapi">
             <column name="id" type="VARCHAR(36)">
                 <constraints primaryKey="true" primaryKeyName="pk_users" nullable="false"/>
             </column>

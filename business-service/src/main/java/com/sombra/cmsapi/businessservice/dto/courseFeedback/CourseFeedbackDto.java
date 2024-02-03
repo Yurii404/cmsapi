@@ -19,6 +19,6 @@ public class CourseFeedbackDto {
   private Course course;
   private CourseStatus status;
   private int finalMark;
-  private String content;
+  private String comment;
   private ZonedDateTime created;
 }
