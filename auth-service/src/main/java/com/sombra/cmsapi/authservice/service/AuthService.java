@@ -24,11 +24,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-@Service
 @Slf4j
+@Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class AuthService {
 
   private final RestTemplate restTemplate;
@@ -40,6 +42,7 @@ public class AuthService {
   private final UserMapper userMapper = UserMapper.INSTANCE;
   private final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
 
+  @Transactional
   public AuthResponseDto register(UserRegisterDto requestDto) {
     // Do check if the role is valid
     validateUserRole(requestDto);
@@ -76,6 +79,7 @@ public class AuthService {
     }
   }
 
+  @Transactional
   public AuthResponseDto authenticate(AuthRequestDto request) {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
