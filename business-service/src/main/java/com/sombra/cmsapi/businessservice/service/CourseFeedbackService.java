@@ -18,12 +18,16 @@ import com.sombra.cmsapi.businessservice.repository.CourseRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@AllArgsConstructor
+@Slf4j
 @Service
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class CourseFeedbackService {
 
   private final CourseFeedbackRepository courseFeedbackRepository;
@@ -34,6 +38,7 @@ public class CourseFeedbackService {
 
   private static final int MINIMUM_GRADE_TO_PASS = 80;
 
+  @Transactional
   public CourseFeedbackDto save(CreateCourseFeedbackRequest requestDto) {
     User student = getStudentById(requestDto.getStudentId());
     Course course = getCourseById(requestDto.getCourseId());
@@ -53,6 +58,7 @@ public class CourseFeedbackService {
     return courseFeedbackMapper.courseFeedbackToCourseFeedbackDto(savedCourseFeedback);
   }
 
+  @Transactional
   public CourseFeedbackDto leaveFeedback(String courseFeedbackId, LeaveCommentRequest requestDto) {
     CourseFeedback courseFeedback = getCourseFeedbackById(courseFeedbackId);
     User instructor = getInstructorById(requestDto.getInstructorId());

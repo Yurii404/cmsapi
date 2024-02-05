@@ -17,7 +17,6 @@ import com.sombra.cmsapi.businessservice.mapper.UserMapper;
 import com.sombra.cmsapi.businessservice.repository.CourseRepository;
 import com.sombra.cmsapi.businessservice.repository.LessonRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -27,10 +26,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@AllArgsConstructor
-@Service
 @Slf4j
+@Service
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class CourseService {
 
   private final CourseRepository courseRepository;
@@ -60,6 +61,7 @@ public class CourseService {
     return courseMapper.courseToCourseDto(savedCourse);
   }
 
+  @Transactional
   public CourseDto assignInstructor(String courseId, String instructorId) {
     Course course = getCourseById(courseId);
     User instructor = getInstructorById(instructorId);
@@ -82,6 +84,7 @@ public class CourseService {
     }
   }
 
+  @Transactional
   public CourseDto withdrawInstructor(String courseId, String instructorId) {
     Course course = getCourseById(courseId);
 
@@ -99,6 +102,7 @@ public class CourseService {
     }
   }
 
+  @Transactional
   public CourseDto registerStudent(String courseId, String studentId) {
     Course course = getCourseById(courseId);
     User student = getStudentById(studentId);
@@ -111,6 +115,7 @@ public class CourseService {
     return courseMapper.courseToCourseDto(savedCourse);
   }
 
+  @Transactional
   public CourseDto removeStudent(String courseId, String studentId) {
     Course course = getCourseById(courseId);
     User student = getStudentById(studentId);

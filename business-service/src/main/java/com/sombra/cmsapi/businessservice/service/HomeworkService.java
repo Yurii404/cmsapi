@@ -13,16 +13,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@AllArgsConstructor
-@Service
 @Slf4j
+@Service
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class HomeworkService {
 
   private final LessonRepository lessonRepository;
   private final HomeworkRepository homeworkRepository;
   private final HomeworkMapper homeworkMapper = HomeworkMapper.INSTANCE;
 
+  @Transactional
   public HomeworkDto save(CreateHomeworkRequest createHomeworkRequest) {
     Lesson lesson = getLessonById(createHomeworkRequest.getLessonId());
 

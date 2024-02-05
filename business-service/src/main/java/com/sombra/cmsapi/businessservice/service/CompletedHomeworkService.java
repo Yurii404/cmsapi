@@ -16,18 +16,20 @@ import com.sombra.cmsapi.businessservice.repository.HomeworkRepository;
 import com.sombra.cmsapi.businessservice.repository.UserRepository;
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@RequiredArgsConstructor
-@Service
 @Slf4j
+@Service
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class CompletedHomeworkService {
 
   private final CompletedHomeworkRepository completedHomeworkRepository;
@@ -38,6 +40,7 @@ public class CompletedHomeworkService {
 
   private final CompletedHomeworkMapper completedHomeworkMapper = CompletedHomeworkMapper.INSTANCE;
 
+  @Transactional
   public CompletedHomeworkDto save(CreateCompletedHomeworkRequest requestDto, MultipartFile file) {
     User student = getStudentById(requestDto.getStudentId());
     Homework homework = getHomeworkById(requestDto.getHomeworkId());
@@ -64,6 +67,7 @@ public class CompletedHomeworkService {
     }
   }
 
+  @Transactional
   public CompletedHomeworkDto checkHomework(
       String completedHomeworkId, CheckHomeworkRequest requestDto) {
     CompletedHomework completedHomework = getCompletedHomeworkById(completedHomeworkId);

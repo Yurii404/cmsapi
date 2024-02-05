@@ -14,16 +14,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@AllArgsConstructor
-@Service
 @Slf4j
+@Service
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class LessonService {
 
   private final LessonRepository lessonRepository;
   private final CourseRepository courseRepository;
   private final LessonMapper lessonMapper = LessonMapper.INSTANCE;
 
+  @Transactional
   public LessonDto save(CreateLessonRequest createLessonRequest) {
     Course course;
     Lesson lessonToSave;
@@ -47,6 +50,7 @@ public class LessonService {
     return lessonMapper.lessonToLessonDto(lessonRepository.save(lessonToSave));
   }
 
+  @Transactional
   public LessonDto update(UpdateLessonRequest updateLessonRequest) {
     Lesson lessonFromRep =
         lessonRepository

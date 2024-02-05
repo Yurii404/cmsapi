@@ -12,21 +12,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@AllArgsConstructor
-@Service
 @Slf4j
+@Service
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
   private final UserRepository userRepository;
   private final UserMapper userMapper = UserMapper.INSTANCE;
 
+  @Transactional
   public UserDto save(UserRegisterDto registerDto) {
     User userToSave = userMapper.userRegisterDtoToUser(registerDto);
 
     return userMapper.userToUserDto(userRepository.save(userToSave));
   }
 
+  @Transactional
   public UserDto updateUserRole(ChangeUserRoleDto requestDto) {
     User userFromRep =
         userRepository
