@@ -6,9 +6,9 @@ spring:
       ribbon:
         enabled: false
   datasource:
-    url: jdbc:mysql://localhost:3306/jwt_security
-    username: root
-    password: SuperSecretPassword
+    url: jdbc:mysql://mysql:3306/jwt_security
+    username: ${SPRING_DATASOURCE_SECURITY_USER}
+    password: ${SPRING_DATASOURCE_SECURITY_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   liquibase:
     enabled: true
@@ -25,11 +25,11 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-service:8761/eureka/
   instance:
     preferIpAddress: true
 
 security:
   jwt:
-    secret: b656cbcc7b32b1f94a9e38ebabfb2ab3925f420416413bdc2f7a94b0bc4e2579
-    expiration: 86400
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION}

@@ -4,17 +4,21 @@ services:
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: SuperSecretPassword
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: SecretPassword
+      MYSQL_ROOT_PASSWORD:  ${SuperSecretPassword}
+      MYSQL_USER:  ${MYSQL_USER}
+      MYSQL_PASSWORD:  ${SecretPassword}
+    env_file:
+      - .env
     ports:
       - "3306:3306"
     networks:
-      - promo
+      - cmsapi
 
   config-service:
     container_name: config-service
     image: config-service
+    env_file:
+      - .env
     build:
       context: ./config-service
       dockerfile: Dockerfile
@@ -22,6 +26,8 @@ services:
       - "8071:8071"
     depends_on:
       - mysql
+    networks:
+      - cmsapi
 
   discovery-service:
     container_name: discovery-service
@@ -29,11 +35,15 @@ services:
     build:
       context: ./discovery-service
       dockerfile: Dockerfile
+    env_file:
+      - .env
     ports:
       - "8761:8761"
     depends_on:
       - mysql
       - config-service
+    networks:
+      - cmsapi
 
   api-gateway:
     container_name: api-gateway
@@ -41,11 +51,16 @@ services:
     build:
       context: ./api-gateway
       dockerfile: Dockerfile
+    env_file:
+      - .env
     ports:
       - "8765:8765"
     depends_on:
       - mysql
+      - config-service
       - discovery-service
+    networks:
+      - cmsapi
 
   business-service:
     container_name: business-service
@@ -53,11 +68,16 @@ services:
     build:
       context: ./business-service
       dockerfile: Dockerfile
+    env_file:
+      - .env
     ports:
       - "8764:8764"
     depends_on:
       - mysql
+      - config-service
       - discovery-service
+    networks:
+      - cmsapi
 
   auth-service:
     container_name: auth-service
@@ -65,13 +85,19 @@ services:
     build:
       context: ./auth-service
       dockerfile: Dockerfile
+    env_file:
+      - .env
     ports:
       - "8763:8763"
     depends_on:
       - mysql
+      - config-service
       - discovery-service
       - business-service
+    networks:
+      - cmsapi
 
 
 networks:
-  promo:
+  cmsapi:
+    driver: bridge

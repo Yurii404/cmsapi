@@ -79,7 +79,7 @@ public class CourseFeedbackService {
         .map(it -> getCompletedHomeworkByStudentAndHomework(student, it))
         .mapToInt(CompletedHomework::getMark)
         .average()
-        .getAsDouble();
+        .orElse(0.0);
   }
 
   public Page<CourseFeedbackDto> getAll(Pageable pageable) {
@@ -112,7 +112,7 @@ public class CourseFeedbackService {
 
   private CompletedHomework getCompletedHomeworkByStudentAndHomework(User user, Homework homework) {
     return completedHomeworkRepository
-        .findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(user, homework)
+        .findTopByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(user, homework)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(

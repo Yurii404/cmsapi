@@ -50,6 +50,7 @@ subprojects {
         compileOnly("org.projectlombok:lombok")
         annotationProcessor("org.projectlombok:lombok")
         implementation 'mysql:mysql-connector-java:8.0.33'
+        implementation 'org.mapstruct:mapstruct:1.5.5.Final'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
                     exclude group: 'org.mockito', module: 'mockito-core'
         }
@@ -60,7 +61,6 @@ subprojects {
         testImplementation 'org.springframework.security:spring-security-test:6.2.1'
         testImplementation 'com.github.database-rider:rider-junit5:1.41.0'
         testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
-        implementation 'org.mapstruct:mapstruct:1.5.5.Final'
         annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
     }
 
