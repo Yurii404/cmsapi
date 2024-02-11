@@ -70,16 +70,25 @@ jobs:
     - name: Build, tag, and push the images to Amazon ECR
       id: build-images
       env:
-        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        MYSQL_USER: ${{ secrets.MYSQL_USER }}
-        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
         IMAGE_TAG: latest
       run: |
-        # Build all docker containers and push them to ECR 
+        # Build and tag the Docker images
         docker-compose build
-        echo "Pushing images to ECR..."
+    
+        # Authenticate Docker with AWS ECR
+        aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
+    
+        # Tag the images with ECR repository URI
+        docker-compose tag mysql:latest $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
+        docker-compose tag config-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:config-service-latest
+        docker-compose tag discovery-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:discovery-service-latest
+        docker-compose tag api-gateway:latest $ECR_REGISTRY/$ECR_REPOSITORY:api-gateway-latest
+        docker-compose tag business-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:business-service-latest
+        docker-compose tag auth-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
+    
+        # Push the images to Amazon ECR
         docker-compose push
     
     - name: Logout of Amazon ECR
