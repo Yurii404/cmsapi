@@ -49,12 +49,6 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: test
- 
-    # Build and push containers with Docker Compose
-    - name: Build and push containers
-      run: |
-        docker-compose build
-        docker-compose push
         
     - name: Upload Artifacts  
       uses: actions/upload-artifact@v3
@@ -81,9 +75,9 @@ jobs:
         IMAGE_TAG: latest
       run: |
         # Build a docker container and push it to ECR 
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker-compose build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         echo "Pushing image to ECR..."
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker-compose push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         # # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         # aws ecs update-service --cluster <cluster_name> --service <service_name> --force-new-deployment
     - name: Logout of Amazon ECR
