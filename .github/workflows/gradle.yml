@@ -21,6 +21,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      docker:
+        image: docker:latest
+        options: --privileged
+        
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -28,6 +33,13 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        
+    # Install Docker Compose
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
@@ -37,7 +49,7 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: test
-
+        
     - name: Upload Artifacts  
       uses: actions/upload-artifact@v3
       with:
@@ -51,22 +63,27 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-north-1
 
-    # - name: Login to Amazon ECR
-    #   id: login-ecr
-    #   uses: aws-actions/amazon-ecr-login@v1
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
 
-    # - name: Build, tag, and push the image to Amazon ECR
-    #   id: build-image
-    #   env:
-    #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-    #     ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-    #     IMAGE_TAG: latest
-    #   run: |
-    #     # Build a docker container and push it to ECR 
-    #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-    #     echo "Pushing image to ECR..."
-    #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-    #     # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-    #     aws ecs update-service --cluster <cluster_name> --service <service_name> --force-new-deployment
-    # - name: Logout of Amazon ECR
-    #   run: docker logout ${{ steps.login-ecr.outputs.registry }}
+    - name: Build, tag, and push the image to Amazon ECR
+      id: build-image
+      env:
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        MYSQL_USER: ${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+        IMAGE_TAG: latest
+      run: |
+        # Build a docker container and push it to ECR 
+        docker-compose build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        echo "Pushing image to ECR..."
+        docker-compose push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        # # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        # aws ecs update-service --cluster <cluster_name> --service <service_name> --force-new-deployment
+    - name: Logout of Amazon ECR
+      run: docker logout ${{ steps.login-ecr.outputs.registry }}
+
+
