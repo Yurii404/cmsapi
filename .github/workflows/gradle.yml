@@ -67,6 +67,9 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
+    # - name: Pull MySQL image
+    #   run: docker pull mysql:8.0
+
     - name: Build, tag, and push the images to Amazon ECR
       id: build-images
       env:
@@ -81,7 +84,7 @@ jobs:
         aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
     
         # Tag the images with ECR repository URI
-        docker tag mysql:latest $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
+        docker tag mysql-1:latest $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
     
         docker tag config-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:config-service-latest
