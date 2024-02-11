@@ -2,8 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   fetch-code:
@@ -12,30 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+ steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      with:
+        arguments: build
 
-      - name: Build
-        run: ./gradlew build
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test
-        run: ./gradlew test
-
-  code-analysis:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Code Analysis with Checkstyle
-        run: ./gradlew checkstyleMain checkstyleTest
-      - name: Post-Analysis
-        if: ${{ always() }}
-        run: echo 'Generated Analysis Result'
-
+    - name: Test with Gradle
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      with:
+        arguments: test
