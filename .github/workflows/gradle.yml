@@ -67,8 +67,8 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    # - name: Pull MySQL image
-    #   run: docker pull mysql:8.0
+    - name: Pull MySQL image
+      run: docker pull mysql:8.0
 
     - name: Build, tag, and push the images to Amazon ECR
       id: build-images
