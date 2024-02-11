@@ -84,7 +84,7 @@ jobs:
         aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
     
         # Tag the images with ECR repository URI
-        docker tag mysql:latest $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
+        docker tag mysql:8.0 $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
     
         docker tag config-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:config-service-latest
