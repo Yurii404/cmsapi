@@ -107,12 +107,12 @@ jobs:
 
     - name: Deploy to ECS
       run:
-        aws ecs update-service --cluster <cmsapi> --service <mysql> --force-new-deployment
-        aws ecs update-service --cluster <cmsapi> --service <config-service> --force-new-deployment
-        aws ecs update-service --cluster <cmsapi> --service <discovery-service> --force-new-deployment
-        aws ecs update-service --cluster <cmsapi> --service <api-gateway> --force-new-deployment
-        aws ecs update-service --cluster <cmsapi> --service <business-service> --force-new-deployment
-        aws ecs update-service --cluster <cmsapi> --service <auth-service> --force-new-deployment
+        aws ecs update-service --cluster <cmsapiapp-cluster> --service <mysql> --force-new-deployment
+        aws ecs update-service --cluster <cmsapiapp-cluster> --service <config-service> --force-new-deployment
+        aws ecs update-service --cluster <cmsapiapp-cluster> --service <discovery-service> --force-new-deployment
+        aws ecs update-service --cluster <cmsapiapp-cluster> --service <api-gateway> --force-new-deployment
+        aws ecs update-service --cluster <cmsapiapp-cluster> --service <business-service> --force-new-deployment
+        aws ecs update-service --cluster <cmsapiapp-cluster> --service <auth-service> --force-new-deployment
 
     - name: Log Docker images
       run: docker images
