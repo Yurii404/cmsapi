@@ -21,6 +21,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      docker:
+        image: docker:latest
+        options: --privileged
+        
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -28,6 +33,13 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        
+    # Install Docker Compose
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
@@ -37,7 +49,13 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: test
-
+ 
+    # Build and push containers with Docker Compose
+    - name: Build and push containers
+      run: |
+        docker-compose build
+        docker-compose push
+        
     - name: Upload Artifacts  
       uses: actions/upload-artifact@v3
       with:
@@ -70,3 +88,5 @@ jobs:
         # aws ecs update-service --cluster <cluster_name> --service <service_name> --force-new-deployment
     - name: Logout of Amazon ECR
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
+
+
