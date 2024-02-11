@@ -70,6 +70,9 @@ jobs:
     - name: Pull MySQL image
       run: docker pull mysql:8.0
 
+    - name: Log Docker images
+      run: docker images
+
     - name: Build, tag, and push the images to Amazon ECR
       id: build-images
       env:
@@ -101,7 +104,10 @@ jobs:
         
         docker tag auth-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
-    
+        
+    - name: Log Docker images
+      run: docker images
+      
     - name: Logout of Amazon ECR
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
