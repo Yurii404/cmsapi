@@ -81,15 +81,23 @@ jobs:
         aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
     
         # Tag the images with ECR repository URI
-        docker-compose tag mysql:latest $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
-        docker-compose tag config-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:config-service-latest
-        docker-compose tag discovery-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:discovery-service-latest
-        docker-compose tag api-gateway:latest $ECR_REGISTRY/$ECR_REPOSITORY:api-gateway-latest
-        docker-compose tag business-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:business-service-latest
-        docker-compose tag auth-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
+        docker tag mysql:latest $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:mysql-latest
     
-        # Push the images to Amazon ECR
-        docker-compose push
+        docker tag config-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:config-service-latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:config-service-latest
+        
+        docker tag discovery-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:discovery-service-latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:discovery-service-latest
+        
+        docker tag api-gateway:latest $ECR_REGISTRY/$ECR_REPOSITORY:api-gateway-latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:api-gateway-latest
+        
+        docker tag business-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:business-service-latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:business-service-latest
+        
+        docker tag auth-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
     
     - name: Logout of Amazon ECR
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
