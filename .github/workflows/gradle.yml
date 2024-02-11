@@ -104,7 +104,14 @@ jobs:
         
         docker tag auth-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
-        
+
+        aws ecs update-service --cluster <cmsapi> --service <mysql> --force-new-deployment
+        aws ecs update-service --cluster <cmsapi> --service <config-service> --force-new-deployment
+        aws ecs update-service --cluster <cmsapi> --service <discovery-service> --force-new-deployment
+        aws ecs update-service --cluster <cmsapi> --service <api-gateway> --force-new-deployment
+        aws ecs update-service --cluster <cmsapi> --service <business-service> --force-new-deployment
+        aws ecs update-service --cluster <cmsapi> --service <auth-service> --force-new-deployment
+
     - name: Log Docker images
       run: docker images
       
