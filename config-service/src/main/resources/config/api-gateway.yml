@@ -18,7 +18,7 @@ management:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-service:8761/eureka/
   instance:
     preferIpAddress: true
 
@@ -30,5 +30,5 @@ logging:
 
 security:
   jwt:
-    secret: b656cbcc7b32b1f94a9e38ebabfb2ab3925f420416413bdc2f7a94b0bc4e2579
-    expiration: 86400
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION}

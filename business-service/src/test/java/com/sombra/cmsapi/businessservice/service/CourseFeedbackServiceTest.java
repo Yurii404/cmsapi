@@ -75,7 +75,7 @@ class CourseFeedbackServiceTest {
     when(userRepository.findByIdAndRole(any(), any())).thenReturn(Optional.ofNullable(student));
     when(courseRepository.findById(any())).thenReturn(Optional.ofNullable(course));
     when(completedHomeworkRepository
-            .findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any()))
+            .findTopByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any()))
         .thenReturn(Optional.ofNullable(completedHomework));
     ArgumentCaptor<CourseFeedback> courseFeedbackArgumentCaptor =
         ArgumentCaptor.forClass(CourseFeedback.class);
@@ -85,7 +85,7 @@ class CourseFeedbackServiceTest {
     verify(courseRepository, times(1)).findById(any());
     verify(userRepository, times(1)).findByIdAndRole(any(), any());
     verify(completedHomeworkRepository, times(1))
-        .findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any());
+        .findTopByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any());
     verify(courseFeedbackRepository, times(1)).save(courseFeedbackArgumentCaptor.capture());
     assertEquals(course.getId(), courseFeedbackArgumentCaptor.getValue().getCourse().getId());
     assertEquals(student.getId(), courseFeedbackArgumentCaptor.getValue().getStudent().getId());
@@ -119,7 +119,7 @@ class CourseFeedbackServiceTest {
     when(userRepository.findByIdAndRole(any(), any())).thenReturn(Optional.ofNullable(student));
     when(courseRepository.findById(any())).thenReturn(Optional.ofNullable(course));
     when(completedHomeworkRepository
-            .findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any()))
+            .findTopByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any()))
         .thenReturn(Optional.ofNullable(completedHomework));
     ArgumentCaptor<CourseFeedback> courseFeedbackArgumentCaptor =
         ArgumentCaptor.forClass(CourseFeedback.class);
@@ -129,7 +129,7 @@ class CourseFeedbackServiceTest {
     verify(courseRepository, times(1)).findById(any());
     verify(userRepository, times(1)).findByIdAndRole(any(), any());
     verify(completedHomeworkRepository, times(1))
-        .findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any());
+        .findTopByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any());
     verify(courseFeedbackRepository, times(1)).save(courseFeedbackArgumentCaptor.capture());
     assertEquals(course.getId(), courseFeedbackArgumentCaptor.getValue().getCourse().getId());
     assertEquals(student.getId(), courseFeedbackArgumentCaptor.getValue().getStudent().getId());
@@ -168,7 +168,7 @@ class CourseFeedbackServiceTest {
     User student = User.builder().id("1111").build();
 
     when(completedHomeworkRepository
-            .findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any()))
+            .findTopByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(any(), any()))
         .thenReturn(Optional.empty());
 
     EntityNotFoundException thrown =
@@ -219,11 +219,11 @@ class CourseFeedbackServiceTest {
             .build();
 
     when(completedHomeworkRepository
-            .findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(
+            .findTopByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(
                 student, firstHomework))
         .thenReturn(Optional.of(firstCompletedHomework));
     when(completedHomeworkRepository
-            .findFirsByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(
+            .findTopByStudentAndHomeworkAndMarkIsNotNullOrderBySubmissionDateDesc(
                 student, secondHomework))
         .thenReturn(Optional.of(secondCompletedHomework));
 
