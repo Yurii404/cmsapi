@@ -70,9 +70,6 @@ jobs:
     - name: Pull MySQL image
       run: docker pull mysql:8.0
 
-    - name: Log Docker images
-      run: docker images
-
     - name: Build, tag, and push the images to Amazon ECR
       id: build-images
       env:
@@ -105,16 +102,14 @@ jobs:
         docker tag auth-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:auth-service-latest
 
-    - name: Deploy to ECS
-      run:
-        aws ecs update-service --cluster <cmsapiapp-cluster> --service <config-service> --force-new-deployment
-        aws ecs update-service --cluster <cmsapiapp-cluster> --service <discovery-service> --force-new-deployment
-        aws ecs update-service --cluster <cmsapiapp-cluster> --service <api-gateway> --force-new-deployment
-        aws ecs update-service --cluster <cmsapiapp-cluster> --service <business-service> --force-new-deployment
-        aws ecs update-service --cluster <cmsapiapp-cluster> --service <auth-service> --force-new-deployment
-
-    - name: Log Docker images
-      run: docker images
+    # Currently blocked by AWS
+    # - name: Deploy to ECS
+    #   run:
+    #     aws ecs update-service --cluster <cmsapiapp-cluster> --service <config-service> --force-new-deployment
+    #     aws ecs update-service --cluster <cmsapiapp-cluster> --service <discovery-service> --force-new-deployment
+    #     aws ecs update-service --cluster <cmsapiapp-cluster> --service <api-gateway> --force-new-deployment
+    #     aws ecs update-service --cluster <cmsapiapp-cluster> --service <business-service> --force-new-deployment
+    #     aws ecs update-service --cluster <cmsapiapp-cluster> --service <auth-service> --force-new-deployment
       
     - name: Logout of Amazon ECR
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
