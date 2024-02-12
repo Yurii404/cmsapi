@@ -107,7 +107,6 @@ jobs:
 
     - name: Deploy to ECS
       run:
-        aws ecs update-service --cluster <cmsapiapp-cluster> --service <mysql> --force-new-deployment
         aws ecs update-service --cluster <cmsapiapp-cluster> --service <config-service> --force-new-deployment
         aws ecs update-service --cluster <cmsapiapp-cluster> --service <discovery-service> --force-new-deployment
         aws ecs update-service --cluster <cmsapiapp-cluster> --service <api-gateway> --force-new-deployment
